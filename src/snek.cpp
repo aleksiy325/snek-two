@@ -1,4 +1,4 @@
-#include "game_state.cpp"
+#include "common/game_state.cpp"
 
 int main(int argc, char **argv){
 	GameState gs = GameState(10, 10, 0);

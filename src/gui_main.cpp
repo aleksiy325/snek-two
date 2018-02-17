@@ -1,4 +1,4 @@
-#include "game_state.cpp"
+#include "common/game_state.cpp"
 #include "gui/board_render.cpp"
 
 int main(int argc, char **argv){

@@ -1,8 +1,8 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <stdio.h>
-#include "../board.cpp"
-#include "../defs.cpp"
+#include "../common/board.cpp"
+#include "../common/defs.cpp"
 #undef main
 
 int BOX_PIXELS = 30;

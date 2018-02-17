@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "game_state.cpp"
+#include "../common/game_state.cpp"
 
  
 TEST (CollisionTest, Wall) { 
