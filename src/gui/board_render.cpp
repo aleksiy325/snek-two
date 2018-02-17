@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "../common/board.cpp"
 #include "../common/defs.cpp"
+#include "../arena/arena.cpp"
 #undef main
 
 int BOX_PIXELS = 30;
@@ -13,9 +14,9 @@ struct SdlHandle{
     SDL_Window* window = NULL;
 };
 
-SdlHandle initSDL(Board& board){
-    int xSize = board.getWidth();
-    int ySize = board.getHeight();
+SdlHandle initSDL(Arena& arena){
+    int xSize = arena.getWidth();
+    int ySize = arena.getHeight();
 
     SdlHandle sdl_handle;
 
@@ -39,7 +40,7 @@ map<CellType, SDL_Color> CELL_COLOR_MAP {
     {CellType::food, {233,10,10,0}}
 };
 
-int renderBoard(SDL_Renderer* renderer, Board& board){
+void renderBoard(SDL_Renderer* renderer, Board& board){
     SDL_Color bg_color = { 220,220,220,0 };
 
     SDL_Color snake_colors[8];
@@ -55,9 +56,8 @@ int renderBoard(SDL_Renderer* renderer, Board& board){
 
     SDL_SetRenderDrawColor(renderer, bg_color.r, bg_color.g, bg_color.b, bg_color.a);
     SDL_RenderClear(renderer);
-    cout << board.getPoints().size() << endl;
 
-    for( auto point: board.getPoints()){ 
+    for(auto point: board.getPoints()){ 
         SDL_Color cur_color;
 
         if(board.cellNumOccupants(point) > 0){
@@ -78,7 +78,11 @@ int renderBoard(SDL_Renderer* renderer, Board& board){
     }
 
     SDL_RenderPresent(renderer);
-    return 0;
+}
+
+int renderArena(SDL_Renderer* renderer, Arena& arena){
+    Board board = arena.getBoard();
+    renderBoard(renderer, board);
 }
 
 void cleanupSDL(SdlHandle handle){

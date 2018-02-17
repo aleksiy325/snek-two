@@ -8,8 +8,8 @@ using namespace std;
 
 class Cell {
 	unordered_set<snake_index> occupants;
-public:
 	CellType type;
+public:
 	Cell();
 	void occupy(snake_index idx);
 	void vacate(snake_index);

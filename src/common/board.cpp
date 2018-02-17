@@ -48,10 +48,10 @@ void Board::clear(){
 	for(auto y = board.begin(); y != board.end(); y++){
 		for(auto x = y->begin(); x != y->end(); x++){
 			if(x == y->begin() || x == y->end() - 1 || y == board.begin() || y == board.end() - 1){
-				x->type = CellType::wall;
+				x->setType(CellType::wall);
 				x->vacateAll();
 			}else{
-				x->type = CellType::empty;
+				x->setType(CellType::empty);
 				x->vacateAll();
 			}
 		}
@@ -64,7 +64,7 @@ void Board::print(){
 			if(cell.numOccupants() > 0){
 				cout << *cell.getOccupants().begin() << ' ';
 			}else{
-				cout << CELL_STR_MAP[cell.type];
+				cout << CELL_STR_MAP[cell.getType()];
 			}
 		}
 		cout << endl;
@@ -77,7 +77,7 @@ Point Board::getRandomEmptyPoint(){
 	do{
 		x = rand() % board.size();
 		y = rand() % board[x].size();
-	}while(board[y][x].type != CellType::empty);
+	}while(board[y][x].getType() != CellType::empty);
 	return Point(x, y);
 }
 

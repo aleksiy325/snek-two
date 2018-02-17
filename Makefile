@@ -16,8 +16,6 @@ gui:
 	g++ -std=c++11 src/gui_main.cpp -o dist/snek -lSDL2main -lSDL2
 	dist/snek
 
-
-
 clean:
 	rm -rf dist
 

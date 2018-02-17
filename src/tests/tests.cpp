@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "../common/game_state.cpp"
+#include "../arena/arena.cpp"
 
  
 TEST (CollisionTest, Wall) { 
@@ -122,7 +123,20 @@ TEST (CollisionTest, GreaterHead) {
 }
 
 
- 
+TEST (ArenaTest, FullRandomGame) { 
+	Arena arena = Arena(10, 10, 0);
+    RandomSnake rsnake = RandomSnake{};
+    Strategy* strat = &rsnake;
+    for(int i = 0; i < 6; i++){
+    	arena.addStrategy(strat);
+    }	
+
+    while(!arena.winnerExists()){
+    	arena.executeTick();
+    }
+}
+
+
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

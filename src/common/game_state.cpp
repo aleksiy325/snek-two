@@ -13,6 +13,7 @@ class GameState {
 public:
 	Board board;
 	vector<Snake> snakes;
+	GameState();
 	GameState(int height, int width);
 	GameState(int height, int width, int num_snakes);
 	void makeMove(Direction dir, snake_index idx);
@@ -22,9 +23,13 @@ public:
 	void checkCollision(Point cur_point);
 	void cleanup();
 	bool isValid();
+	Board getBoard();
+	int getHeight();
+	int getWidth();
 };
 
 
+GameState::GameState(){}
 
 GameState::GameState(int width, int height){
 	board = Board(width, height);
@@ -159,4 +164,16 @@ bool GameState::isValid(){
 		}
 	}
 	return true;
+}
+
+Board GameState::getBoard(){
+	return board;
+}
+
+int GameState::getHeight(){
+	return board.getHeight();
+}
+
+int GameState::getWidth(){
+	return board.getWidth();
 }
