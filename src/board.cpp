@@ -11,6 +11,8 @@ using namespace std;
 class Board {
 public:
 	vector<vector<Cell>> board;
+	int width;
+	int height;
 	Board();
 	Board(int width, int height);
 	void clear();
@@ -26,6 +28,8 @@ public:
 	vector<Point> getPoints();
 	bool isValid();
 	void placeFood(Point p);
+	size_t getWidth();
+	size_t getHeight();
 };
 
 
@@ -110,6 +114,7 @@ vector<Point> Board::getPoints(){
 	for(auto y = board.begin(); y != board.end(); y++){
 		for(auto x = y->begin(); x != y->end(); x++){
 			Point p = Point(x - y->begin(), y - board.begin());
+			points.push_back(p);
 		}
 	}
 	return points;
@@ -131,4 +136,12 @@ bool Board::isValid(){
 
 void Board::placeFood(Point p){
 	board[p.y][p.x].setFood();
+}
+
+size_t Board::getWidth(){
+	return board.size();
+}
+
+size_t Board::getHeight(){
+	return board[0].size();
 }
