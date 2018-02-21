@@ -7,7 +7,9 @@ public:
 	Point();
 	Point(int x, int y);
 	Point addMove(Direction dir);
-	bool compare(Point p);
+	bool operator ==(const Point& p) const;
+	bool operator !=(const Point& p) const;
+
 };
 
 
@@ -38,6 +40,20 @@ Point Point::addMove(Direction dir){
 	return p;
 }
 
-bool Point::compare(Point p) {
+bool Point::operator ==(const Point& p) const{
 	return (x == p.x) && (y == p.y);
 }
+
+bool Point::operator !=(const Point& p) const{
+	return (x != p.x) || (y != p.y);
+}
+
+namespace std {
+	template <> 
+		class hash<Point> {
+		public:
+			size_t operator()(const Point& p) const {
+				return hash<int>()(p.x) ^ hash<int>()(p.y);
+			}
+	};
+};

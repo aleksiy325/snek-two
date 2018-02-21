@@ -13,7 +13,7 @@ test:
 
 gui:
 	mkdir -p dist
-	g++ -std=c++11 src/gui_main.cpp -o dist/snek -lSDL2main -lSDL2
+	g++ -std=c++11 src/gui_main.cpp -o dist/snek -lSDL2main -lSDL2 -lSDL2_ttf
 	dist/snek
 
 clean:

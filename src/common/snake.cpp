@@ -11,6 +11,9 @@ class Snake {
 public: 
 	deque<Point> points;
 	Snake(Point start);
+	void setHealth(int new_health);
+	int getHealth();
+	int loseHealth();
 	Point getHead();
 	bool isAlive();
 	void setAlive(bool alive);
@@ -30,6 +33,19 @@ Snake::Snake(Point start){
 
 Point Snake::getHead(){
 	return *points.begin();
+}
+
+void Snake::setHealth(int new_health){
+	health = new_health;
+}
+
+int Snake::getHealth(){
+	return health;
+}
+
+int Snake::loseHealth(){
+	health -= HEALTH_LOSS;
+	return health;
 }
 
 bool Snake::isAlive(){

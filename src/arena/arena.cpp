@@ -10,12 +10,13 @@ public:
 	GameState game_state;
 	vector<Strategy*> strategies;
 	Arena();
-	Arena(int width, int height, int num_food);
+	Arena(int width, int height, int max_food);
 	void decideMoves();
 	void executeTick();
 	void addStrategy(Strategy* strategy);
 	void addStrategies(vector<Strategy*> strategies);
 	Board getBoard();
+	GameState getGameState();
 	int getWidth();
 	int getHeight();
 	bool winnerExists();
@@ -23,8 +24,8 @@ public:
 
 Arena::Arena(){}
 
-Arena::Arena(int width, int height, int num_food){
-    game_state = GameState(width, height);
+Arena::Arena(int width, int height, int max_food){
+    game_state = GameState(width, height, max_food);
 }
 
 void Arena::decideMoves(){
@@ -83,4 +84,8 @@ bool Arena::winnerExists(){
         idx++;    
     }
 	return alive == 0 || alive == 1;
+}
+
+GameState Arena::getGameState(){
+	return game_state;
 }

@@ -3,8 +3,12 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <queue>
+#include <unordered_set>
+#include <unordered_map>
 #include "cell.cpp"
 #include "point.cpp"
+#include "path.cpp"
 
 using namespace std;
 
@@ -30,6 +34,10 @@ public:
 	void placeFood(Point p);
 	size_t getWidth();
 	size_t getHeight();
+	bool isSafe(Point p);
+	bool in(Point p);
+	vector<Point> expand(Point p);
+	Path bfsFood(Point start);
 };
 
 
@@ -77,7 +85,7 @@ Point Board::getRandomEmptyPoint(){
 	do{
 		x = rand() % board.size();
 		y = rand() % board[x].size();
-	}while(board[y][x].getType() != CellType::empty);
+	}while(board[y][x].getType() != CellType::empty || board[y][x].numOccupants() != 0);
 	return Point(x, y);
 }
 
@@ -144,4 +152,54 @@ size_t Board::getWidth(){
 
 size_t Board::getHeight(){
 	return board[0].size();
+}
+
+bool Board::isSafe(Point p){
+	return board[p.y][p.x].getType() != CellType::wall && cellNumOccupants(p) == 0;
+}
+
+bool Board::in(Point p){
+	return p.y >= 0 && p.y < board.size() && p.x >= 0 && p.x < board[p.y].size();
+}
+
+vector<Point> Board::expand(Point p) {
+	vector<Point> neighbours = vector<Point>();
+	for (auto d : DIRECTIONS) {
+		Point n = p.addMove(d);
+		if(in(n)){
+			neighbours.push_back(p);
+		}
+	}
+	return neighbours;
+}
+
+Path Board::bfsFood(Point start){
+	queue<Point> q = queue<Point>();
+	unordered_set<Point> visited = unordered_set<Point>();
+	unordered_map<Point, Point> parent = unordered_map<Point, Point>();
+	visited.insert(start);
+	q.push(start);
+
+	while(!q.empty()){
+		Point cur = q.front();
+		q.pop();
+
+		for(auto point: expand(cur)){
+			if(in(point) && isSafe(point) && visited.find(point) == visited.end()){
+				parent.insert(point, cur);
+				if(getCellType(point) == CellType::food){
+					Path path = Path();
+					while(start != point){
+						path.add(point);
+						point = parent[point];
+					}
+					return path;
+
+				}
+				visited.insert(point);
+				q.push(point);
+			}
+		}
+	}
+	return Path();
 }

@@ -19,7 +19,9 @@ enum class Direction {
 	East	
 };
 
+const vector<Direction> DIRECTIONS = {Direction::North, Direction::South, Direction::West, Direction::East};
 const int MAX_HEALTH = 100;
+const int HEALTH_LOSS = 1;
 
 map<CellType, string> CELL_STR_MAP {
 	{CellType::empty, "  "},

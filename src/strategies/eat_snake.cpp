@@ -5,13 +5,13 @@
 
 vector<Direction> directions = {Direction::North, Direction::South, Direction::East, Direction::West};
 
-class RandomSnake: public Strategy {
+class EatSnake: public Strategy {
 public:
-	RandomSnake();
+	EatSnake();
 	Direction decideMove(GameState gs, snake_index idx);
 };
 
-RandomSnake::RandomSnake(){};
+EatSnake::EatSnake(){};
 
 Direction findMove(Board board, Point head){
 	vector<Direction> safe;
@@ -33,4 +33,3 @@ Direction RandomSnake::decideMove(GameState gs, snake_index idx){
 	Snake snake = gs.getSnake(idx);
 	Point head = snake.getHead();
 	return findMove(board, head);
-} 

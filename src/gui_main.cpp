@@ -3,13 +3,16 @@
 
 
 int main(int argc, char **argv){
-    Arena arena = Arena(10, 10, 0);
+    Arena arena = Arena(15, 15, 5);
 
     RandomSnake rsnake = RandomSnake{};
     Strategy* strat = &rsnake;
     arena.addStrategy(strat);
+    arena.addStrategy(strat);
+    arena.addStrategy(strat);
+    arena.addStrategy(strat);
 
-    SdlHandle sdl_handle = initSDL(arena);
+    SDL_Handle handle = initSDL(arena);
 
     bool quit = false;
     SDL_Event e;
@@ -24,7 +27,7 @@ int main(int argc, char **argv){
         if ((deltaTime) > timePerFrame){
             prevTime = curTime;
             arena.executeTick();
-            renderArena(sdl_handle.renderer, arena);
+            renderArena(handle, arena);
         }
 
         while(SDL_PollEvent(&e) != 0){
@@ -34,6 +37,6 @@ int main(int argc, char **argv){
         }
     }
 
-    cleanupSDL(sdl_handle);
+    cleanupSDL(handle);
 }
    
