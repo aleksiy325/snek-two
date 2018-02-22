@@ -167,7 +167,7 @@ vector<Point> Board::expand(Point p) {
 	for (auto d : DIRECTIONS) {
 		Point n = p.addMove(d);
 		if(in(n)){
-			neighbours.push_back(p);
+			neighbours.push_back(n);
 		}
 	}
 	return neighbours;
@@ -179,22 +179,21 @@ Path Board::bfsFood(Point start){
 	unordered_map<Point, Point> parent = unordered_map<Point, Point>();
 	visited.insert(start);
 	q.push(start);
-
 	while(!q.empty()){
 		Point cur = q.front();
 		q.pop();
 
 		for(auto point: expand(cur)){
 			if(in(point) && isSafe(point) && visited.find(point) == visited.end()){
-				parent.insert(point, cur);
+				parent[point] = cur;
 				if(getCellType(point) == CellType::food){
 					Path path = Path();
 					while(start != point){
 						path.add(point);
 						point = parent[point];
 					}
+					path.add(point);
 					return path;
-
 				}
 				visited.insert(point);
 				q.push(point);

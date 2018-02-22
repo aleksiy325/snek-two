@@ -3,7 +3,6 @@
 #include "../common/game_state.cpp"
 #include "strategy.cpp"
 
-vector<Direction> directions = {Direction::North, Direction::South, Direction::East, Direction::West};
 
 class RandomSnake: public Strategy {
 public:
@@ -13,9 +12,12 @@ public:
 
 RandomSnake::RandomSnake(){};
 
-Direction findMove(Board board, Point head){
+Direction RandomSnake::decideMove(GameState gs, snake_index idx){
+	Board board = gs.getBoard();
+	Snake snake = gs.getSnake(idx);
+	Point head = snake.getHead();
 	vector<Direction> safe;
-	for(auto dir : directions){
+	for(auto dir : DIRECTIONS){
 		Point p = head.addMove(dir);
 		if(board.isSafe(p)){
 			safe.push_back(dir);
@@ -26,11 +28,4 @@ Direction findMove(Board board, Point head){
 		return safe[rand() % safe.size()];
 	}
 	return Direction::North;
-}
-
-Direction RandomSnake::decideMove(GameState gs, snake_index idx){
-	Board board = gs.getBoard();
-	Snake snake = gs.getSnake(idx);
-	Point head = snake.getHead();
-	return findMove(board, head);
 } 

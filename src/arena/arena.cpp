@@ -1,6 +1,5 @@
 #pragma once
 #include "../strategies/strategy.cpp"
-#include "../strategies/random_snake.cpp"
 #include "../common/game_state.cpp"
 #include "../common/board.cpp"
 
