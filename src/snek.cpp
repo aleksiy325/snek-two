@@ -1,14 +1,19 @@
-#include "common/game_state.cpp"
+#include "strategies/random_snake.cpp"
+#include "strategies/eat_snake.cpp"
+#include "arena/arena.cpp"
 
 int main(int argc, char **argv){
-	GameState gs = GameState(10, 10, 0);
-	gs.addSnake(Point(1, 1));
-	gs.addSnake(Point(6, 5));
-	gs.board.print();
-	gs.makeMove(Direction::North, 0);
-	gs.cleanup();
-	gs.board.print();
-	gs.makeMove(Direction::East, 0);
-	gs.cleanup();
-	gs.board.print();
+	Arena arena = Arena(10, 10, 5, 1000);
+
+    RandomSnake rsnake = RandomSnake{};
+    Strategy* strat = &rsnake;
+    EatSnake esnake = EatSnake{};
+    Strategy* estrat = &esnake;
+
+    arena.addStrategy(strat);
+    arena.addStrategy(strat);
+    arena.addStrategy(estrat);
+    arena.addStrategy(estrat);
+
+    arena.execute();
 }

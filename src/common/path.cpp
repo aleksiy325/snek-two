@@ -23,8 +23,6 @@ Direction Path::getStepDir(int step) {
 
 	int x = two.x - one.x;
 	int y = two.y - one.y;
-	// cout << one.x << " " << one.y << endl;
-	// cout << two.x << " " << two.y << endl;
 
 	assert(x != 0 || y != 0);
 

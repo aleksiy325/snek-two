@@ -5,7 +5,7 @@
 #include <string>
 #include "../common/board.cpp"
 #include "../common/defs.cpp"
-#include "../arena/arena.cpp"
+#include "../arena/game.cpp"
 #undef main
 
 const int BOX_PIXELS = 30;
@@ -39,9 +39,9 @@ vector<SDL_Color> initSnakeColors(){
 
 vector<SDL_Color> SNAKE_COLORS = initSnakeColors();
 
-SDL_Handle initSDL(Arena& arena){
-    int xSize = arena.getWidth();
-    int ySize = arena.getHeight();
+SDL_Handle initSDL(Game& game){
+    int xSize = game.getWidth();
+    int ySize = game.getHeight();
     SDL_Handle handle;
     handle.board_width = (xSize * BOX_PIXELS) + ((xSize + 1) * BOX_SPACE);
 
@@ -115,6 +115,9 @@ void renderScoreboard(SDL_Handle handle, vector<Snake> snakes){
             str += "Dead";
         }
 
+        str += " ";
+        str += to_string(snake.getScore());
+
         SDL_Surface* surface = TTF_RenderText_Solid(handle.font, str.c_str(), text_color);
         SDL_Texture* message = SDL_CreateTextureFromSurface(handle.renderer, surface);
         SDL_Rect message_rect = {
@@ -131,9 +134,9 @@ void renderScoreboard(SDL_Handle handle, vector<Snake> snakes){
 
 }
 
-void renderArena(SDL_Handle handle, Arena& arena){
-    Board board = arena.getBoard();
-    GameState gs = arena.getGameState();
+void renderGame(SDL_Handle handle, Game& game){
+    Board board = game.getBoard();
+    GameState gs = game.getGameState();
     vector<Snake> snakes = gs.getSnakes();
     SDL_Color bg_color = { 220, 220, 220, 0 };
     SDL_SetRenderDrawColor(handle.renderer, bg_color.r, bg_color.g, bg_color.b, bg_color.a);

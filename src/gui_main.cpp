@@ -1,23 +1,23 @@
 #include "gui/board_render.cpp"
 #include "strategies/random_snake.cpp"
 #include "strategies/eat_snake.cpp"
-#include "arena/arena.cpp"
+#include "arena/game.cpp"
 
 
 int main(int argc, char **argv){
-    Arena arena = Arena(15, 15, 5);
+    Game game = Game(15, 15, 5);
 
     RandomSnake rsnake = RandomSnake{};
     Strategy* strat = &rsnake;
     EatSnake esnake = EatSnake{};
     Strategy* estrat = &esnake;
 
-    arena.addStrategy(strat);
-    arena.addStrategy(strat);
-    arena.addStrategy(estrat);
-    arena.addStrategy(estrat);
+    game.addStrategy(strat);
+    game.addStrategy(strat);
+    game.addStrategy(estrat);
+    game.addStrategy(estrat);
 
-    SDL_Handle handle = initSDL(arena);
+    SDL_Handle handle = initSDL(game);
 
     bool quit = false;
     SDL_Event e;
@@ -31,8 +31,8 @@ int main(int argc, char **argv){
         Uint32 deltaTime = curTime - prevTime;
         if ((deltaTime) > timePerFrame){
             prevTime = curTime;
-            arena.executeTick();
-            renderArena(handle, arena);
+            game.executeTick();
+            renderGame(handle, game);
         }
 
         while(SDL_PollEvent(&e) != 0){
