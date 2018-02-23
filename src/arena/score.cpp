@@ -12,3 +12,4 @@ Score::Score(){
 	ticks = 0;
 	isWinner = false;
 }
+

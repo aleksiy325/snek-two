@@ -32,10 +32,6 @@ void Arena::execute(){
 		game.addStrategies(strategies);
 		game.execute();
 		vector<Score> scores = game.getScores();
-		for(auto score: scores){
-			cout << " " << score.ticks << " " << score.isWinner << endl;
-		}
-		cout << "------" << endl;
 	}
 }
 
