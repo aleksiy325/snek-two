@@ -19,3 +19,8 @@ gui:
 clean:
 	rm -rf dist
 
+galgo: 
+	mkdir -p dist
+	g++ -std=c++11 GALGO-2.0/src/test.cpp -o dist/galgo
+	dist/galgo
+
