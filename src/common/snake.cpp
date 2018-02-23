@@ -8,7 +8,7 @@ using namespace std;
 class Snake {
 	bool alive;
 	int health;
-	int score;
+	int score = 0;
 public: 
 	deque<Point> points;
 	Snake(Point start);
@@ -24,6 +24,8 @@ public:
 	deque<Point> getPoints();
 	void clearPoints();
 	int getScore();
+	bool operator <(const Snake& s) const;
+
 };
 
 
@@ -88,4 +90,8 @@ void Snake::clearPoints(){
 
 int Snake::getScore(){
 	return score;
+}
+
+bool Snake::operator <(const Snake& s) const{
+	return score < s.score;
 }

@@ -107,12 +107,27 @@ void Game::execute(){
 }
 
 vector<Score> Game::getScores(){
-	vector<Score> scores;
-	for(auto snake: game_state.getSnakes()){
-		int ticks = snake.getScore();
-		bool isWinner = snake.isAlive();
-		Score score = Score(ticks, isWinner);
-		scores.push_back(score);
+	vector<pair<int, int>> ranks;
+	vector<Snake> snakes = game_state.getSnakes();
+	vector<Score> scores(snakes.size());
+
+	int i = 0;
+	for(auto snake: snakes){
+		ranks.push_back(make_pair(-snake.getScore(), i));
+		i++;
+	}
+
+	sort(ranks.begin(), ranks.end());
+
+	int place = 0;
+	int last_tick = -1;
+
+	for(auto p: ranks){
+		scores[p.second] = Score(snakes[p.second].getScore(), place);
+		if(last_tick != p.first){
+			place++;
+			last_tick = p.first;
+		}
 	}
 	return scores;
 }

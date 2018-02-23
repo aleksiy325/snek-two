@@ -9,7 +9,9 @@ const int width = 15;
 const int height = 15;
 const int max_food = 5;
 const int num_train_snakes = 6;
-const int iterations = 3000;
+const int iterations = 50;
+const int test_iter = 100;
+
 
 
 template <typename T>
@@ -18,34 +20,33 @@ class MaxScore
 public:
    static std::vector<std::vector<T>> Objective(const std::vector<std::vector<T>>& snake_params)
    {  
-      Game game = Game(width, height, max_food);
+      std::vector<std::vector<T>> result(num_train_snakes, std::vector<T>(1, 0));
       RandomSnake rsnake = RandomSnake{};
       EatSnake esnake = EatSnake{};
-      game.addStrategy(&rsnake);
-      game.addStrategy(&rsnake);
-      game.addStrategy(&esnake);
-      game.addStrategy(&esnake);
 
-      std::vector<HeuristicSnake> strategies;
-      for(auto params: snake_params){
-         HeuristicSnake hsnake = HeuristicSnake(params[0], params[1], params[2], params[3]);
-         strategies.push_back(hsnake);
-      } 
-      for(auto strat: strategies){
-         game.addStrategy(&strat);
-      } 
+      for(int j = 0; j < test_iter; j++){
+         Game game = Game(width, height, max_food);
+         game.addStrategy(&rsnake);
+         game.addStrategy(&rsnake);
+         game.addStrategy(&esnake);
+         game.addStrategy(&esnake);
 
-      game.execute();      
+         std::vector<HeuristicSnake> strategies;
+         for(auto params: snake_params){
+            HeuristicSnake hsnake = HeuristicSnake(params[0], params[1], params[2], params[3]);
+            strategies.push_back(hsnake);
+         } 
+         for(auto strat: strategies){
+            game.addStrategy(&strat);
+         } 
 
-      std::vector<Score> scores = game.getScores();
-      std::vector<std::vector<T>> result;
+         game.execute(); 
 
-      for(int i = scores.size() - num_train_snakes; i < scores.size(); i++){
-         std::vector<double> fitness;
-         fitness.push_back(scores[i].evalFitness());
-         result.push_back(fitness);
+         std::vector<Score> scores = game.getScores();
+         for(int i = scores.size() - num_train_snakes; i < scores.size(); i++){
+            result[i - 4][0] += scores[i].evalFitness();
+         }
       }
-
       return result;
    }
 };

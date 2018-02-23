@@ -3,27 +3,23 @@
 
 class Score{
 	int ticks;
-	bool isWinner;
+	int rank;
 public:
 	Score();
-	Score(int ticks, bool isWinner);
+	Score(int ticks, int rank);
 	double evalFitness();
 };
 
 Score::Score(){
 	ticks = 0;
-	isWinner = false;
 }
 
-Score::Score(int ticks, bool isWinner){
+Score::Score(int ticks, int rank){
 	this->ticks = ticks;
-	this->isWinner = isWinner;
+	this->rank = rank;
 }
 
 double Score::evalFitness(){
-	double fitness = ticks;
-	if(isWinner){
-		fitness += 0;
-	}
+	double fitness = -rank + (ticks / 1000.0);
 	return fitness;
 }

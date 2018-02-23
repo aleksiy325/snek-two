@@ -18,7 +18,10 @@ int main(int argc, char **argv){
     game.addStrategy(&esnake);
     game.addStrategy(&hsnake);
     game.addStrategy(&hsnake);
-
+    game.addStrategy(&hsnake);
+    game.addStrategy(&hsnake);
+    game.addStrategy(&hsnake);
+    game.addStrategy(&hsnake);
 
     SDL_Handle handle = initSDL(game);
 

@@ -182,7 +182,10 @@ void GameState::cleanup(){
 	while(cur_food < max_food){
 		addFood();
 	}
-	isValid();
+
+	if(!isValid()){
+		board.print();
+	}
 	//assert(isValid());
 }
 
