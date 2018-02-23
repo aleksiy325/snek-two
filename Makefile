@@ -21,6 +21,10 @@ clean:
 
 galgo: 
 	mkdir -p dist
-	g++ -std=c++11 GALGO-2.0/src/test.cpp -o dist/galgo
+	g++ -std=c++11 GALGO-2.0/src/example.cpp -o dist/galgo
 	dist/galgo
 
+train: 
+	mkdir -p dist
+	g++ -std=c++11 src/training.cpp -o dist/train
+	dist/train

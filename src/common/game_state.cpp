@@ -182,6 +182,8 @@ void GameState::cleanup(){
 	while(cur_food < max_food){
 		addFood();
 	}
+	isValid();
+	//assert(isValid());
 }
 
 bool GameState::isValid(){
@@ -223,3 +225,4 @@ int GameState::getWidth(){
 vector<Snake> GameState::getSnakes(){
 	return snakes;
 }
+

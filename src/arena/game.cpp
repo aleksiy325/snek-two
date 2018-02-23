@@ -109,9 +109,9 @@ void Game::execute(){
 vector<Score> Game::getScores(){
 	vector<Score> scores;
 	for(auto snake: game_state.getSnakes()){
-		Score score = Score();
-		score.ticks = snake.getScore();
-		score.isWinner = snake.isAlive();
+		int ticks = snake.getScore();
+		bool isWinner = snake.isAlive();
+		Score score = Score(ticks, isWinner);
 		scores.push_back(score);
 	}
 	return scores;

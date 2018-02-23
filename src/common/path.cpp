@@ -5,6 +5,7 @@ public:
 	deque<Point> path;
 	void add(Point p);
 	bool exists();
+	size_t length();
 	Direction getStepDir(int step);
 };
 
@@ -34,4 +35,8 @@ Direction Path::getStepDir(int step) {
 		return Direction::East;
 	}
 	return Direction::West;
+}
+
+size_t Path::length(){
+	return path.size() - 1;
 }

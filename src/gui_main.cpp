@@ -1,21 +1,24 @@
 #include "gui/board_render.cpp"
 #include "strategies/random_snake.cpp"
 #include "strategies/eat_snake.cpp"
+#include "strategies/heuristic_snake.cpp"
 #include "arena/game.cpp"
 
 
 int main(int argc, char **argv){
     Game game = Game(15, 15, 5);
 
-    RandomSnake rsnake = RandomSnake{};
-    Strategy* strat = &rsnake;
-    EatSnake esnake = EatSnake{};
-    Strategy* estrat = &esnake;
+    RandomSnake rsnake = RandomSnake();
+    EatSnake esnake = EatSnake();
+    HeuristicSnake hsnake = HeuristicSnake();
 
-    game.addStrategy(strat);
-    game.addStrategy(strat);
-    game.addStrategy(estrat);
-    game.addStrategy(estrat);
+    game.addStrategy(&rsnake);
+    game.addStrategy(&rsnake);
+    game.addStrategy(&esnake);
+    game.addStrategy(&esnake);
+    game.addStrategy(&hsnake);
+    game.addStrategy(&hsnake);
+
 
     SDL_Handle handle = initSDL(game);
 
