@@ -31,6 +31,7 @@ public:
 	int getHeight();
 	int getWidth();
 	vector<Snake> getSnakes();
+	void printScoreBoard();
 };
 
 
@@ -115,7 +116,7 @@ void GameState::checkCollision(Point cur_point){
 		vector<snake_index> heads;
 		vector<size_t> head_lengths;
 
-		for(auto& s_index: occupants){
+		for(auto s_index: occupants){
 			Snake cur_snake = snakes[s_index];
 			Point head = cur_snake.getHead();
 			if(cur_point == head){
@@ -124,7 +125,11 @@ void GameState::checkCollision(Point cur_point){
 			}
 		}
 
-		if(heads.size() > 1){
+		assert(head_lengths.size() > 0);
+		assert(head_lengths.size() == heads.size());
+
+		// if all occupants are heads and there is more than on head
+		if(heads.size() == board.cellNumOccupants(cur_point) && heads.size() > 1){
 			size_t max_len = *max_element(head_lengths.begin(), head_lengths.end());
 			int count_max = count(head_lengths.begin(), head_lengths.end(), max_len);
 
@@ -140,7 +145,7 @@ void GameState::checkCollision(Point cur_point){
 			}
 
 		}else{
-			for(auto& s_index: heads){
+			for(auto s_index: heads){
 				snakes[s_index].setAlive(false);
 			}
 		}
@@ -182,8 +187,8 @@ void GameState::cleanup(){
 	while(cur_food < max_food){
 		addFood();
 	}
-	isValid();
-	//assert(isValid());
+	
+	assert(isValid());
 }
 
 bool GameState::isValid(){
@@ -224,5 +229,14 @@ int GameState::getWidth(){
 
 vector<Snake> GameState::getSnakes(){
 	return snakes;
+}
+
+void GameState::printScoreBoard(){
+	int i = 0;
+	for(auto snake: snakes){
+		Point head = snake.getHead();
+		cout << i << " " << snake.getHealth() << " " << snake.isAlive() << " " << head.x << "," << head.y << endl;
+		i++;
+	}
 }
 

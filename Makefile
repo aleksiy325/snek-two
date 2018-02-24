@@ -26,5 +26,5 @@ galgo:
 
 train: 
 	mkdir -p dist
-	g++ -std=c++11 src/training.cpp -o dist/train
+	g++ -std=c++11 src/training.cpp -o dist/train -O3
 	dist/train

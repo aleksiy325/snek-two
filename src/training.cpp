@@ -5,11 +5,11 @@
 #include "strategies/heuristic_snake.cpp"
 #include "arena/game.cpp"
 
-const int width = 15;
-const int height = 15;
-const int max_food = 5;
-const int num_train_snakes = 6;
-const int iterations = 3000;
+const int width = 50;
+const int height = 50;
+const int max_food = 10;
+const int num_train_snakes = 10;
+const int iterations = 200;
 
 
 template <typename T>
@@ -60,5 +60,8 @@ int main()
    ga.Selection = TRS;
    ga.CrossOver = P1XO;
    ga.Mutation = SPM;
+   ga.covrate = 0.25;
+   ga.mutrate = 0.05;
+   ga.elitpop = 1;
    ga.run();
 }

@@ -71,7 +71,10 @@ void Board::print(){
 	for (auto row : board) {
 		for (auto cell : row) {
 			if(cell.numOccupants() > 0){
-				cout << *cell.getOccupants().begin() << ' ';
+				for(auto occupant : cell.getOccupants()){
+					cout << occupant;
+				}
+				cout  << ' ';
 			}else{
 				cout << CELL_STR_MAP[cell.getType()];
 			}
