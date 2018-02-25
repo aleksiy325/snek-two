@@ -74,6 +74,7 @@ snake_index GameState::addSnake(Point start){
 }
 
 Snake& GameState::getSnake(snake_index idx){
+	assert(idx < snakes.size() && idx >= 0);
 	return snakes[idx];
 }
 

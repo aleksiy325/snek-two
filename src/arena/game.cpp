@@ -43,6 +43,8 @@ void Game::decideMoves(){
     for(auto strategy: strategies){
         Snake snake = game_state.getSnake(idx);
         if(snake.isAlive()){
+
+        	//cout << strategy << endl;
             Direction dir = strategy->decideMove(game_state, idx);
             game_state.makeMove(dir, idx);
         }
@@ -116,3 +118,4 @@ vector<Score> Game::getScores(){
 	}
 	return scores;
 }
+

@@ -4,9 +4,10 @@
 #include "strategies/heuristic_snake.cpp"
 #include "arena/game.cpp"
 
+const int num_hsnake = 10;
 
 int main(int argc, char **argv){
-    Game game = Game(15, 15, 5);
+    Game game = Game(20, 20, 5);
 
     RandomSnake rsnake = RandomSnake();
     EatSnake esnake = EatSnake();
@@ -16,9 +17,10 @@ int main(int argc, char **argv){
     game.addStrategy(&rsnake);
     game.addStrategy(&esnake);
     game.addStrategy(&esnake);
-    game.addStrategy(&hsnake);
-    game.addStrategy(&hsnake);
 
+    for(int i = 0; i < num_hsnake; i++){
+        game.addStrategy(&hsnake);
+    }
 
     SDL_Handle handle = initSDL(game);
 
