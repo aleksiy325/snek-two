@@ -24,7 +24,9 @@ public:
 	deque<Point> getPoints();
 	void clearPoints();
 	int getScore();
+	// int getIndexOfPoint(Point point);
 };
+
 
 
 Snake::Snake(Point start){

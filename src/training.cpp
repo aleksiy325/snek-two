@@ -47,6 +47,7 @@ public:
             game.addStrategy(&esnake);
 
 
+
             //leaking memory fix later
             for (auto params : snake_params) {
                 game.addStrategy(new HeuristicSnake(params[0], params[1], params[2], params[3]));
@@ -81,7 +82,6 @@ int main()
     // used in file name
     srand(time(NULL));
     g_train_id = rand();
-
     galgo::Parameter<double> health_weight({ -10.0, 10.0});
     galgo::Parameter<double> food_weight({ -10.0, 10.0});
     galgo::Parameter<double> length_weight({ -10.0, 10.0});

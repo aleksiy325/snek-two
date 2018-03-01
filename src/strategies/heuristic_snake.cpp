@@ -36,7 +36,7 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
     if (!snake.isAlive()) {
         return std::numeric_limits<double>::lowest();
     }
-
+    // cout << "REACH";
     Board board = gs.getBoard();
     Point head = snake.getHead();
     double score = 0;
@@ -50,7 +50,11 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
         }
     }
 
-    int free_squares = board.floodFill(head);
+    // int free_squares = board.floodFill(head);
+    
+    int free_squares = gs.voronoi(idx);
+    // cerr << "Free_squares" << free_squares;
+    
     if (!free_squares) {
         return std::numeric_limits<double>::lowest();
     }

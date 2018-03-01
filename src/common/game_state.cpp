@@ -6,6 +6,11 @@
 #include "board.cpp"
 #include "snake.cpp"
 
+
+#include <map>
+#include <set>
+#include <cassert>
+
 using namespace std;
 
 
@@ -32,7 +37,128 @@ public:
 	int getWidth();
 	vector<Snake> getSnakes();
 	void printScoreBoard();
+	int voronoi(int voronoi_snake_id);
 };
+
+// bool operator< ( Point a, Point b ) { return std::make_pair(a.x,a.y) < std::make_pair(b.x,b.y) ; }
+
+int GameState::voronoi(int voronoi_snake_id){
+	map<int, int> freespace_score;
+	set<Point> visited;
+	queue<Point> q;
+	// Get all snake's head
+	vector<Point> snakes_head;
+	for(int i = 0; i < snakes.size(); i++){
+		snakes_head.push_back(snakes.at(i).getHead());
+		q.push(snakes.at(i).getHead());
+		freespace_score[i] = 0;
+		cout << "i " << i << " y x " << snakes.at(i).getHead().y << " " << snakes.at(i).getHead().x << "\n"; 
+	}
+
+	cout << "freeSpace: \n";
+	for (auto& t : freespace_score)
+		cout << t.first << "-" 
+				<< t.second<< "\n";		
+	// Init new board
+
+	cout << "Snake size: " << snakes.size() << "\n";
+	vector<vector<set<int>>>  voronoi_board = vector<vector<set<int>>>(board.getHeight(),vector<set<int>> (board.getWidth()));
+	for(int i = 0; i < board.getHeight(); i ++){
+		for(int j = 0; j < board.getWidth(); j ++){
+			CellType  cellType = board.getCellType(Point(j,i));
+			unordered_set<snake_index> aSet =  board.getCellOccupants(Point(j,i));
+			if (cellType == CellType::wall){
+				voronoi_board[i][j].insert(-3);
+			}else if (cellType == CellType::food){
+				voronoi_board[i][j].insert(-2);	
+			}else {
+				if (aSet.size() != 0){
+					cout << ">";
+					for (const auto& elem: aSet) {
+						cout << elem << "*";
+					}
+					cout << "<";
+				}else{
+					voronoi_board[i][j].insert(-1);
+				}
+			}
+			for (const auto& elem: voronoi_board[i][j]) {
+				cout << elem << " ";
+			}					
+		}
+		cout << "\n";
+	}
+
+	set<Point>::iterator it = visited.find(Point(0,0));
+	while(!q.empty()){
+		Point cur = q.front();
+		q.pop();
+		for (auto point : board.expand(cur)){
+			if(board.in(point)
+			&& board.isSafe(point) 
+
+			&& visited.find(point) == visited.end()){
+				
+				visited.insert(point);
+				int snake_idx; 
+				// for(unordered_set<snake_index>::iterator it =  board.getCellOccupants(point).begin(); 
+				// 	it != board.getCellOccupants(point).end(); ++it){
+				// 	snake_idx = *it;
+				// 	break;
+				// }
+				for (const auto& elem: board.getCellOccupants(point)) {
+					snake_idx = elem;
+				}				
+
+				freespace_score[snake_idx] += 1;
+				set<int> occupantsAtPoint = voronoi_board.at(point.y).at(point.x);
+
+				if (occupantsAtPoint.size() > 2){ // already 2 things
+					for (const auto& elem: occupantsAtPoint) {
+						if (elem >= 0){
+							// freespace_score[elem] -= 1;
+							cout << "DELETED\n";							
+						}
+					}					
+					// for(set<int>::iterator it =  occupantsAtPoint.begin(); it != occupantsAtPoint.end(); ++it){
+					// 	if (*it >= 0){
+					// 		freespace_score[snake_idx] -= 1;
+					// 		cout << "DELETED\n";
+					// 	}
+					// }
+				}else{
+					
+					vector<Point> neighbors = board.expand(point); 
+					for(auto point : neighbors){
+						q.push(point);
+					}
+					// if (board.getCellType(point) == CellType::food){
+					// 	closestFood[point] = snake_idx;
+					// }
+					// if(board.getCellType(point) == CellType::wall){
+					// 	int snake_id_at_wall;
+					// 	for(unordered_set<snake_index>::iterator it =  board.getCellOccupants(point).begin(); 
+					// 		it != board.getCellOccupants(point).end(); ++it){
+					// 		snake_id_at_wall = *it;
+					// 		break;
+					// 	}
+					// 	// TODO: change this if add the logic for remove tail
+					// 	int ttl = snakes.at(snake_id_at_wall).getIndexOfPoint(point);
+					// 	if (ttl > )
+					// }
+				}
+				occupantsAtPoint.insert(snake_idx);
+			}
+		}
+	}
+	cout << "freeSpace: \n";
+	for (auto& t : freespace_score)
+		cout << t.first << "-" 
+				<< t.second<< "\n";	
+	assert(freespace_score[voronoi_snake_id] != 0);
+	return freespace_score[voronoi_snake_id];
+}
+
 
 
 GameState::GameState(){}

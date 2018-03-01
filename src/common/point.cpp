@@ -9,6 +9,7 @@ public:
 	Point addMove(Direction dir);
 	bool operator ==(const Point& p) const;
 	bool operator !=(const Point& p) const;
+	bool operator < (const Point& p)  const;
 
 };
 
@@ -46,6 +47,10 @@ bool Point::operator ==(const Point& p) const{
 
 bool Point::operator !=(const Point& p) const{
 	return (x != p.x) || (y != p.y);
+}
+
+bool Point::operator < (const Point& p) const{
+	return (x*1000 + y) < (p.x*1000 + p.y);
 }
 
 namespace std {
