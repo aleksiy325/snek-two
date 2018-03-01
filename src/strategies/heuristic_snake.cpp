@@ -11,18 +11,20 @@
 
 class HeuristicSnake: public Strategy {
 public:
-    double food_weight = 6;
-    double length_weight = 0.01;
-    double free_weight = 0.8;
+    double food_weight = 10;
+    double length_weight = -0.64057;
+    double free_weight = 1;
+    double food_exp = 1;
     HeuristicSnake();
-    HeuristicSnake(double food_weight, double length_weight, double free_weight);
+  HeuristicSnake(double food_weight, double food_exp, double length_weight, double free_weight);
     double scoreState(GameState gs, snake_index idx);
     Direction decideMove(GameState gs, snake_index idx);
 };
 
 HeuristicSnake::HeuristicSnake() {};
 
-HeuristicSnake::HeuristicSnake(double food_weight, double length_weight, double free_weight) {
+HeuristicSnake::HeuristicSnake(double food_weight, double food_exp, double length_weight, double free_weight) {
+    this->food_exp = food_exp;
     this->food_weight = food_weight;
     this->length_weight = length_weight;
     this->free_weight = free_weight;
@@ -49,7 +51,7 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
         }
         int rope = snake.getHealth() - paths[0].length();
         // score += food_weight * pow(double(rope),3.0/5.0);
-        score += food_weight * atan(0.75 * double(rope));
+        score += food_weight * atan(food_exp * double(rope));
         // cout << "score: " << score << "\n";
     }
 

@@ -39,6 +39,7 @@ public:
         RandomSnake rsnake = RandomSnake{};
         EatSnake esnake = EatSnake{};
 
+        cout << "training\n";
         for (int j = 0; j < game_iters; j++) {
             Game game = Game(width, height, max_food);
             game.addStrategy(&rsnake);
@@ -46,11 +47,9 @@ public:
             game.addStrategy(&esnake);
             game.addStrategy(&esnake);
 
-
-
             //leaking memory fix later
             for (auto params : snake_params) {
-                game.addStrategy(new HeuristicSnake(params[0], params[1], params[2]));
+              game.addStrategy(new HeuristicSnake(params[0], params[1], params[2], params[3]));
             }
 
             game.execute();
@@ -86,7 +85,8 @@ int main()
     galgo::Parameter<double> food_weight({ -10.0, 10.0});
     galgo::Parameter<double> length_weight({ -10.0, 10.0});
     galgo::Parameter<double> free_weight({ -10.0, 10.0});
-    galgo::GeneticAlgorithm<double> ga(MaxScore<double>::Objective, num_train_snakes, iterations, true, food_weight, length_weight, free_weight);
+    galgo::Parameter<double> food_exp({ 0.05, 1.0});
+    galgo::GeneticAlgorithm<double> ga(MaxScore<double>::Objective, num_train_snakes, iterations, true, food_weight, food_exp, length_weight, free_weight);
     ga.Selection = TRS;
     ga.CrossOver = P1XO;
     ga.Mutation = SPM;
