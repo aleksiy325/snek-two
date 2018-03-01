@@ -9,11 +9,11 @@
 
 
 class HeuristicSnake: public Strategy {
+public:
     double health_weight = 2.02777;
     double food_weight = 9.00786;
     double length_weight = -3.63638;
     double free_weight = 4.72282;
-public:
     HeuristicSnake();
     HeuristicSnake(double health_weight, double food_weight, double length_weight, double free_weight);
     double scoreState(GameState gs, snake_index idx);

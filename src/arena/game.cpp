@@ -5,7 +5,6 @@
 #include "score.cpp"
 #include <time.h>
 
-
 class Game {
 public:
 	int tick;
@@ -23,6 +22,7 @@ public:
 	int getWidth();
 	int getHeight();
 	bool winnerExists();
+  bool isWinner(int i);
 	void execute();
 	vector<Score> getScores();
 };
@@ -49,7 +49,7 @@ void Game::decideMoves(){
             Direction dir = strategy->decideMove(game_state, idx);
             game_state.makeMove(dir, idx);
         }
-        idx++;    
+        idx++;
     }
 }
 
@@ -118,5 +118,9 @@ vector<Score> Game::getScores(){
 		scores.push_back(score);
 	}
 	return scores;
+}
+
+bool Game::isWinner(int i){
+	return game_state.getSnakes()[i].isAlive();
 }
 
