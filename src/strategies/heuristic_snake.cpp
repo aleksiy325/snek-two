@@ -48,7 +48,8 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
             return std::numeric_limits<double>::lowest();
         }
         int rope = snake.getHealth() - paths[0].length();
-        score += food_weight * pow(double(rope),3.0/5.0);
+        // score += food_weight * pow(double(rope),3.0/5.0);
+        score += food_weight * atan(0.75 * double(rope));
         // cout << "score: " << score << "\n";
     }
 
