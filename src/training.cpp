@@ -13,7 +13,7 @@ const int height = 15;
 const int max_food = 3;
 const int num_train_snakes = 10;
 const int iterations = 100;
-const int game_iters = 1;
+const int game_iters = 5;
 
 static int g_iter_count = 0;
 static int g_train_id;

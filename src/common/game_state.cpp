@@ -10,6 +10,7 @@
 #include <map>
 #include <set>
 #include <cassert>
+#include <tuple>
 
 using namespace std;
 
@@ -45,23 +46,20 @@ public:
 int GameState::voronoi(int voronoi_snake_id){
 	map<int, int> freespace_score;
 	set<Point> visited;
-	queue<Point> q;
+	queue<tuple<Point,int, int>> q;
 	// Get all snake's head
-	vector<Point> snakes_head;
 	for(int i = 0; i < snakes.size(); i++){
-		snakes_head.push_back(snakes.at(i).getHead());
-		q.push(snakes.at(i).getHead());
-		freespace_score[i] = 0;
-		cout << "i " << i << " y x " << snakes.at(i).getHead().y << " " << snakes.at(i).getHead().x << "\n"; 
+		if (snakes.at(i).isAlive()){
+			q.push(make_tuple(snakes.at(i).getHead(), i, 0));
+			// visited.insert(snakes.at(i).getHead());
+			freespace_score[i] = 0;
+		// cout << "i " << i << " y x " << snakes.at(i).getHead().y << " " << snakes.at(i).getHead().x << "\n"; 					
+		}
 	}
 
-	cout << "freeSpace: \n";
-	for (auto& t : freespace_score)
-		cout << t.first << "-" 
-				<< t.second<< "\n";		
-	// Init new board
 
-	cout << "Snake size: " << snakes.size() << "\n";
+	// Init new board
+	// cout << "Snake size: " << snakes.size() << "\n";
 	vector<vector<set<int>>>  voronoi_board = vector<vector<set<int>>>(board.getHeight(),vector<set<int>> (board.getWidth()));
 	for(int i = 0; i < board.getHeight(); i ++){
 		for(int j = 0; j < board.getWidth(); j ++){
@@ -70,91 +68,72 @@ int GameState::voronoi(int voronoi_snake_id){
 			if (cellType == CellType::wall){
 				voronoi_board[i][j].insert(-3);
 			}else if (cellType == CellType::food){
-				voronoi_board[i][j].insert(-2);	
-			}else {
-				if (aSet.size() != 0){
-					cout << ">";
+				// voronoi_board[i][j].insert(-2);	
+			}else { // Empty
+				if (aSet.size() != 0){ // Snake occupy
 					for (const auto& elem: aSet) {
-						cout << elem << "*";
+						// cout << elem << "*";
+						voronoi_board[i][j].insert(elem);
 					}
-					cout << "<";
-				}else{
-					voronoi_board[i][j].insert(-1);
+					// voronoi_board[i][j].insert(-3);
+				}else{ // Really empty
+					// voronoi_board[i][j].insert(-1);
 				}
 			}
-			for (const auto& elem: voronoi_board[i][j]) {
-				cout << elem << " ";
-			}					
-		}
-		cout << "\n";
-	}
-
-	set<Point>::iterator it = visited.find(Point(0,0));
-	while(!q.empty()){
-		Point cur = q.front();
-		q.pop();
-		for (auto point : board.expand(cur)){
-			if(board.in(point)
-			&& board.isSafe(point) 
-
-			&& visited.find(point) == visited.end()){
+			// if (voronoi_board[i][j].size() == 0){
+			// 	cout << " X" << " ";
+			// }else{
+			// 	for (const auto& elem: voronoi_board[i][j]) {
+			// 		cout << elem << " ";
+			// 	}					
+			// }
 				
-				visited.insert(point);
-				int snake_idx; 
-				// for(unordered_set<snake_index>::iterator it =  board.getCellOccupants(point).begin(); 
-				// 	it != board.getCellOccupants(point).end(); ++it){
-				// 	snake_idx = *it;
-				// 	break;
-				// }
-				for (const auto& elem: board.getCellOccupants(point)) {
-					snake_idx = elem;
-				}				
-
-				freespace_score[snake_idx] += 1;
-				set<int> occupantsAtPoint = voronoi_board.at(point.y).at(point.x);
-
-				if (occupantsAtPoint.size() > 2){ // already 2 things
-					for (const auto& elem: occupantsAtPoint) {
-						if (elem >= 0){
-							// freespace_score[elem] -= 1;
-							cout << "DELETED\n";							
-						}
-					}					
-					// for(set<int>::iterator it =  occupantsAtPoint.begin(); it != occupantsAtPoint.end(); ++it){
-					// 	if (*it >= 0){
-					// 		freespace_score[snake_idx] -= 1;
-					// 		cout << "DELETED\n";
-					// 	}
-					// }
-				}else{
-					
-					vector<Point> neighbors = board.expand(point); 
-					for(auto point : neighbors){
-						q.push(point);
-					}
-					// if (board.getCellType(point) == CellType::food){
-					// 	closestFood[point] = snake_idx;
-					// }
-					// if(board.getCellType(point) == CellType::wall){
-					// 	int snake_id_at_wall;
-					// 	for(unordered_set<snake_index>::iterator it =  board.getCellOccupants(point).begin(); 
-					// 		it != board.getCellOccupants(point).end(); ++it){
-					// 		snake_id_at_wall = *it;
-					// 		break;
-					// 	}
-					// 	// TODO: change this if add the logic for remove tail
-					// 	int ttl = snakes.at(snake_id_at_wall).getIndexOfPoint(point);
-					// 	if (ttl > )
-					// }
-				}
-				occupantsAtPoint.insert(snake_idx);
-			}
 		}
+		// cout << "\n";
 	}
-	cout << "freeSpace: \n";
-	for (auto& t : freespace_score)
-		cout << t.first << "-" 
-				<< t.second<< "\n";	
+
+	// Main queue
+	while(!q.empty()){
+		queue<tuple<Point,int,int>> sub_q;
+		while(!q.empty()){
+			tuple<Point,int,int> cur = q.front();
+			q.pop();
+			Point point = get<0>(cur);
+			int snake_id = get<1>(cur);
+			if (visited.find(point) == visited.end()){
+				visited.insert(get<0>(cur));
+				// freespace_score[snake_id] += 1;
+				sub_q.push(cur);
+			}
+			// set<int> occupantsAtPoint = voronoi_board.at(point.y).at(point.x);
+			voronoi_board.at(point.y).at(point.x).insert(snake_id);					
+			freespace_score[snake_id] += 1;
+		}		
+		while(!sub_q.empty()){
+			tuple<Point,int,int> cur = sub_q.front();
+			sub_q.pop();
+			Point point = get<0>(cur);
+			set<int> occupantsAtPoint = voronoi_board.at(point.y).at(point.x);
+			bool isFree = true;
+			if (occupantsAtPoint.size() > 1){ // at least 2 snakes
+				isFree = false;
+			}
+			if(isFree){
+				vector<Point> neighbors = board.expand(point);
+				for(auto neighbor : neighbors){
+					if(board.in(neighbor) && board.isSafe(neighbor) && visited.find(neighbor) == visited.end()){
+						q.push(make_tuple(neighbor, get<1>(cur), get<2>(cur) + 1));
+					}
+				}				
+			}			
+		}
+
+	}
+
+	// cout << "freeSpace for index: " << voronoi_snake_id << "\n";
+	// for (auto& t : freespace_score)
+	// 	cout << t.first << "-" 
+	// 			<< t.second<< "\n";	
 	assert(freespace_score[voronoi_snake_id] != 0);
 	return freespace_score[voronoi_snake_id];
 }
