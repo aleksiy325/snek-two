@@ -3,6 +3,7 @@
 #include "../common/game_state.cpp"
 #include "../common/board.cpp"
 #include "score.cpp"
+#include <time.h>
 
 
 class Game {

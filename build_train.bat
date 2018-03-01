@@ -1,0 +1,1 @@
+cl /nologo /Zi /MD /EHsc /I /O3 /w34716 src/training.cpp /Fedist/train.exe /Fodist/ /link /subsystem:console

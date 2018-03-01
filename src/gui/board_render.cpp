@@ -30,7 +30,7 @@ vector<SDL_Color> initSnakeColors(){
     for(int i = 1; i <= 2; i++){
         for(int j = 1; j <= 2; j++){
             for(int k = 1; k <= 2; k++){
-                snake_colors.push_back({i*50, j*50, k*50, 0});
+              snake_colors.push_back({(Uint8)(i*50), (Uint8)(j*50), (Uint8)(k*50), (Uint8)0});
             }
         }
     }
