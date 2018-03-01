@@ -50,7 +50,7 @@ public:
 
             //leaking memory fix later
             for (auto params : snake_params) {
-                game.addStrategy(new HeuristicSnake(params[0], params[1], params[2], params[3]));
+                game.addStrategy(new HeuristicSnake(params[0], params[1], params[2]));
             }
 
             game.execute();
@@ -61,14 +61,14 @@ public:
               result[indexAdj][0] += scores[i].evalFitness() / game_iters;
 
               // save the winning snake's params
-              if(game.isWinner(i)){
-                std::vector<float> params;
-                params.push_back(snake_params[indexAdj][0]);
-                params.push_back(snake_params[indexAdj][1]);
-                params.push_back(snake_params[indexAdj][2]);
-                params.push_back(snake_params[indexAdj][3]);
-                saveSnakeParams(params);
-              }
+              // if(game.isWinner(i)){
+              //   std::vector<float> params;
+              //   params.push_back(snake_params[indexAdj][0]);
+              //   params.push_back(snake_params[indexAdj][1]);
+              //   params.push_back(snake_params[indexAdj][2]);
+              //   params.push_back(snake_params[indexAdj][3]);
+              //   saveSnakeParams(params);
+              // }
               delete game.strategies[i];
             }
         }
@@ -82,11 +82,11 @@ int main()
     // used in file name
     srand(time(NULL));
     g_train_id = rand();
-    galgo::Parameter<double> health_weight({ -10.0, 10.0});
+    // galgo::Parameter<double> health_weight({ -10.0, 10.0});
     galgo::Parameter<double> food_weight({ -10.0, 10.0});
     galgo::Parameter<double> length_weight({ -10.0, 10.0});
     galgo::Parameter<double> free_weight({ -10.0, 10.0});
-    galgo::GeneticAlgorithm<double> ga(MaxScore<double>::Objective, num_train_snakes, iterations, true, health_weight, food_weight, length_weight, free_weight);
+    galgo::GeneticAlgorithm<double> ga(MaxScore<double>::Objective, num_train_snakes, iterations, true, food_weight, length_weight, free_weight);
     ga.Selection = TRS;
     ga.CrossOver = P1XO;
     ga.Mutation = SPM;
