@@ -19,6 +19,12 @@ enum class Direction {
 	East	
 };
 
+ostream& operator<<(std::ostream& o, Direction c)
+{
+    cout << static_cast<int>(c);
+    return o;
+}
+
 const vector<Direction> DIRECTIONS = {Direction::North, Direction::South, Direction::West, Direction::East};
 const int MAX_HEALTH = 100;
 const int HEALTH_LOSS = 1;
