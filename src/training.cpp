@@ -8,12 +8,12 @@
 #include <string>
 #include <random>
 
-const int width = 15;
-const int height = 15;
-const int max_food = 3;
-const int num_train_snakes = 10;
+const int width = 20;
+const int height = 20;
+const int max_food = 10;
+const int num_train_snakes = 8;
 const int iterations = 100;
-const int game_iters = 5;
+const int game_iters = 10;
 
 static int g_iter_count = 0;
 static int g_train_id;

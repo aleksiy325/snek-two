@@ -41,33 +41,33 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
     Point head = snake.getHead();
     double score = 0;
 
-    vector<Path> paths = gs.bfsFood(head);
+    // vector<Path> paths = gs.bfsFood(head);
 
-    if (paths.size()) {
-        // score += 1.0 / paths[0].length() * food_weight;
-        if (snake.getHealth() < paths[0].length()) {
-            return std::numeric_limits<double>::lowest();
-        }
-        int rope = snake.getHealth() - paths[0].length();
-        // score += food_weight * pow(double(rope),3.0/5.0);
-        score += food_weight * atan(food_exp * double(rope));
-        // cout << "score: " << score << "\n";
-    }
+    // if (paths.size()) {
+    //     // score += 1.0 / paths[0].length() * food_weight;
+    //     if (snake.getHealth() < paths[0].length()) {
+    //         return std::numeric_limits<double>::lowest();
+    //     }
+    //     int rope = snake.getHealth() - paths[0].length();
+    //     // score += food_weight * pow(double(rope),3.0/5.0);
+    //     score += food_weight * atan(food_exp * double(rope));
+    //     // cout << "score: " << score << "\n";
+    // }
 
-    int free_squares = gs.floodFill(head);
+    int free_squares = gs.voronoi(idx);
 
     //int free_squares = gs.voronoi(idx);
     // cerr << "Free_squares" << free_squares;
 
-    if (!free_squares) {
-        return std::numeric_limits<double>::lowest();
-    }
+    // if (!free_squares) {
+    //     return std::numeric_limits<double>::lowest();
+    // }
 
-    // score += exp(health_weight * snake.getHealth() / 100.0);
+    // // score += exp(health_weight * snake.getHealth() / 100.0);
 
-    score += free_squares * free_weight;
+    // score += free_squares * free_weight;
 
-    score += 1.0 / snake.getSize() * length_weight;
+    // score += 1.0 / snake.getSize() * length_weight;
 
     return score;
 }

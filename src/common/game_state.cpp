@@ -365,10 +365,9 @@ int GameState::getTick(){
 }
 
 bool GameState::willBeUnnocupied(Point p, int distance){
-	// TODO: fix conditions
 	bool will_be_unoccupied = true;
 	if(board.cellNumOccupants(p) > 0){
-		//assert(board.cellNumOccupants(p) == 1);
+		assert(board.cellNumOccupants(p) == 1);
 		snake_index occupant = *board.getCellOccupants(p).begin();
 		will_be_unoccupied = snakes[occupant].getTurnsOccupied(p) <= distance;
 	}
@@ -450,4 +449,59 @@ int GameState::floodFill(Point start){
 		}
 	}
 	return visited.size();
+}
+
+int GameState::voronoi(snake_index index){
+	int depth  = 0;
+	const pair<Point, snake_index> PAIR_DEPTH_MARK;
+	const snake_index MARK = -1;
+	queue<pair<Point, snake_index>> q = queue<pair<Point, snake_index>>();
+	unordered_map<Point, snake_index> visited = unordered_map<Point, snake_index>();
+	vector<int> counts = vector<int>(snakes.size());
+
+	for(int i = 0; i < snakes.size(); i++){
+		Snake snake = snakes[i];
+		if(snake.isAlive()){
+			Point head = snake.getHead();
+			pair<Point, snake_index> p = pair<Point, snake_index>(head, i);
+			q.push(p);
+			visited[head] = i;
+		}
+	}
+	q.push(PAIR_DEPTH_MARK);
+
+	while(!q.empty()){
+		pair<Point, snake_index> p = q.front();
+		q.pop();
+
+		if(p == PAIR_DEPTH_MARK){
+			depth++;
+			q.push(PAIR_DEPTH_MARK);
+			if(q.front() == PAIR_DEPTH_MARK){
+				break;// two marks end cond
+			} 
+		}else{
+			Point cur = p.first;
+			snake_index idx = p.second;
+
+			for(auto point: board.expand(cur)){
+				//in map
+				if(visited.find(point) != visited.end()){
+					snake_index other = visited[point];
+					if(other != MARK && other != idx){
+						counts[other]--;
+						visited[point] = MARK;
+					}
+				}else{
+					if(board.in(point) && isSafe(point, depth)){
+						counts[idx]++;
+						pair<Point, snake_index> npair = pair<Point, snake_index>(point, idx);
+						visited[point] = idx;
+						q.push(npair);
+					}
+				}
+			}
+		}
+	}
+	return counts[index];
 }

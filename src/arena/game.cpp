@@ -40,12 +40,11 @@ Game::Game(int width, int height, int max_food, int seed){
 
 void Game::decideMoves(){
     snake_index idx = 0;
+    GameState save_state = game_state;
     for(auto strategy: strategies){
-        Snake snake = game_state.getSnake(idx);
+        Snake snake = save_state.getSnake(idx);
         if(snake.isAlive()){
-
-        	//cout << strategy << endl;
-            Direction dir = strategy->decideMove(game_state, idx);
+            Direction dir = strategy->decideMove(save_state, idx);
             game_state.makeMove(dir, idx);
         }
         idx++;
