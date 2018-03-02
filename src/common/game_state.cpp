@@ -209,6 +209,7 @@ void GameState::makeMove(Direction dir, snake_index idx){
 
 	switch (type) {
 		case CellType::food:
+      cout << "idx " << idx << " eating food\n";
 			snakes[idx].setHealth(MAX_HEALTH);
 			break;
 

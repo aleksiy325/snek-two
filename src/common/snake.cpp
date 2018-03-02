@@ -84,6 +84,7 @@ Point Snake::makeMove(Direction dir){
 
 Point Snake::popTail(){
 	Point back = points.back();
+  // cout << "popping back snake" << <<  ": " << back.x << "," << back.y << "\n";
 	points.pop_back();
 	return back;
 }

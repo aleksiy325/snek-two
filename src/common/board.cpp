@@ -34,8 +34,11 @@ public:
 	void placeFood(Point p);
 	size_t getWidth();
 	size_t getHeight();
+	bool isSafe(Point p);
 	bool in(Point p);
 	vector<Point> expand(Point p);
+	vector<Path> bfsFood(Point start);
+	int floodFill(Point start);
 };
 
 
@@ -157,6 +160,10 @@ size_t Board::getHeight(){
 	return board[0].size();
 }
 
+bool Board::isSafe(Point p){
+	return board[p.y][p.x].getType() != CellType::wall && cellNumOccupants(p) == 0;
+}
+
 bool Board::in(Point p){
 	return p.y >= 0 && p.y < board.size() && p.x >= 0 && p.x < board[p.y].size();
 }
@@ -170,4 +177,52 @@ vector<Point> Board::expand(Point p) {
 		}
 	}
 	return neighbours;
+}
+
+vector<Path> Board::bfsFood(Point start){
+	vector<Path> paths;
+	queue<Point> q = queue<Point>();
+	unordered_set<Point> visited = unordered_set<Point>();
+	unordered_map<Point, Point> parent = unordered_map<Point, Point>();
+	visited.insert(start);
+	q.push(start);
+	while(!q.empty()){
+		Point cur = q.front();
+		q.pop();
+		for(auto point: expand(cur)){
+			if(in(point) && isSafe(point) && visited.find(point) == visited.end()){
+				parent[point] = cur;
+				visited.insert(point);
+				if(getCellType(point) == CellType::food){
+					Path path = Path();
+					while(start != point){
+						path.add(point);
+						point = parent[point];
+					}
+					path.add(point);
+					paths.push_back(path);
+				}
+				q.push(point);
+			}
+		}
+	}
+	return paths;
+}
+
+int Board::floodFill(Point start){
+	queue<Point> q = queue<Point>();
+	unordered_set<Point> visited = unordered_set<Point>();
+	visited.insert(start);
+	q.push(start);
+	while(!q.empty()){
+		Point cur = q.front();
+		q.pop();
+		for(auto point: expand(cur)){
+			if(in(point) && isSafe(point) && visited.find(point) == visited.end()){
+				visited.insert(point);
+				q.push(point);
+			}
+		}
+	}
+	return visited.size();
 }
