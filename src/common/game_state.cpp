@@ -16,11 +16,12 @@ using namespace std;
 
 
 class GameState {
+	int max_food;
 	int cur_food;
-public:
+	int tick;
 	Board board;
 	vector<Snake> snakes;
-	int max_food;
+public:
 	GameState();
 	GameState(int height, int width);
 	GameState(int height, int width, int num_snakes);
@@ -39,6 +40,7 @@ public:
 	vector<Snake> getSnakes();
 	void printScoreBoard();
 	int voronoi(int voronoi_snake_id);
+	int getTick();
 };
 
 // bool operator< ( Point a, Point b ) { return std::make_pair(a.x,a.y) < std::make_pair(b.x,b.y) ; }
@@ -144,6 +146,7 @@ GameState::GameState(){}
 
 GameState::GameState(int width, int height){
 	board = Board(width, height);
+	this->tick = 0;
 }
 
 GameState::GameState(int width, int height, int max_food){
@@ -153,6 +156,7 @@ GameState::GameState(int width, int height, int max_food){
 	for(int i = 0; i < max_food; i++){
     	addFood();
     }
+    this->tick = 0;
 }
 
 snake_index GameState::addSnake(){
@@ -210,8 +214,12 @@ void GameState::makeMove(Direction dir, snake_index idx){
 			break;
 
 		case CellType::empty:
-			old_tail = snake.popTail();
-			board.vacateCell(old_tail, idx);
+			if(snake.getFreeMoves() == 0){
+				old_tail = snake.popTail();
+				board.vacateCell(old_tail, idx);
+			}else{
+				snake.useFreeMove();
+			}
 			break;
 	}
 }
@@ -295,6 +303,7 @@ void GameState::cleanup(){
 	}
 	
 	assert(isValid());
+	tick++;
 }
 
 bool GameState::isValid(){
@@ -346,3 +355,6 @@ void GameState::printScoreBoard(){
 	}
 }
 
+int GameState::getTick(){
+	return this->tick;
+}

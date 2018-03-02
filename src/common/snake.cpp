@@ -9,9 +9,11 @@ class Snake {
 	bool alive;
 	int health;
 	int score;
+	int free_moves;
 public: 
 	deque<Point> points;
 	Snake(Point start);
+	Snake(Point start, int free_moves);
 	void setHealth(int new_health);
 	int getHealth();
 	int loseHealth();
@@ -24,9 +26,10 @@ public:
 	deque<Point> getPoints();
 	void clearPoints();
 	int getScore();
+	int getFreeMoves();
+	void useFreeMove();
 	// int getIndexOfPoint(Point point);
 };
-
 
 
 Snake::Snake(Point start){
@@ -34,7 +37,17 @@ Snake::Snake(Point start){
 	setAlive(true);
 	score = 0;
 	points.push_back(start);
+	this->free_moves = FREE_MOVES;
 }
+
+Snake::Snake(Point start, int free_moves){
+	health = MAX_HEALTH;
+	setAlive(true);
+	score = 0;
+	points.push_back(start);
+	this->free_moves = free_moves;
+}
+
 
 Point Snake::getHead(){
 	return *points.begin();
@@ -90,4 +103,12 @@ void Snake::clearPoints(){
 
 int Snake::getScore(){
 	return score;
+}
+
+int Snake::getFreeMoves(){
+	return free_moves;
+}
+
+void Snake::useFreeMove(){
+	free_moves--;
 }

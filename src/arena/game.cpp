@@ -7,7 +7,6 @@
 
 class Game {
 public:
-	int tick;
 	GameState game_state;
 	vector<Strategy*> strategies;
 	Game();
@@ -56,7 +55,6 @@ void Game::decideMoves(){
 void Game::executeTick(){
 	decideMoves();
     game_state.cleanup();
-   	tick++;
     if(!game_state.isValid()){
         cout << "Non valid game_state" << endl;
     }
