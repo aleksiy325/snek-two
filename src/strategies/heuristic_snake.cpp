@@ -55,6 +55,7 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
     // }
 
     int free_squares = gs.voronoi(idx);
+    score += free_squares;
 
     //int free_squares = gs.voronoi(idx);
     // cerr << "Free_squares" << free_squares;
@@ -74,12 +75,16 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
 
 Direction HeuristicSnake::decideMove(GameState gs, snake_index idx) {
     vector<pair<double, Direction>> move_scores;
+    cout << "IDX: " << idx << "\n";
     for (auto dir : DIRECTIONS) {
         GameState new_state = gs;
         new_state.makeMove(dir, idx);
         new_state.cleanup();
-        double score = scoreState(new_state, idx);
-        move_scores.push_back(make_pair(score, dir));
+        if (new_state.getSnake(idx).isAlive()){
+            double score = scoreState(new_state, idx);
+            move_scores.push_back(make_pair(score, dir));
+            cout << "score: " << score << " dir: " << dir << "\n";            
+        }
     }
     vector<pair<double, Direction>>::iterator result = max_element(move_scores.begin(), move_scores.end());
     return result->second;
