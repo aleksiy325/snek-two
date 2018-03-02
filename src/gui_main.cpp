@@ -7,7 +7,7 @@
 const int num_hsnake = 2;
 
 int main(int argc, char **argv){
-    Game game = Game(20, 20, 10);
+    Game game = Game(10, 10, 20);
 
     // RandomSnake rsnake = RandomSnake();
     // EatSnake esnake = EatSnake();

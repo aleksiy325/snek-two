@@ -39,6 +39,22 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
     }
     // cout << "REACH";
     Point head = snake.getHead();
+
+    map<Point,int> potential_head_ons;
+    for(int i = 0; i < gs.getSnakes().size(); i++ ){
+        if (i != idx){
+            vector<Point> expand = gs.getBoard().expand( gs.getSnakes().at(i).getHead());
+            for(auto point : expand){
+                potential_head_ons.insert(pair<Point,int>(point,i));
+            }
+        }
+    }
+    if (potential_head_ons.find(head) != potential_head_ons.end()){
+        Snake enemy = gs.getSnake(potential_head_ons.find(head)->second);
+        if (enemy.getSize() >= snake.getSize()){
+            return std::numeric_limits<double>::lowest();
+        }
+    }
     double score = 0;
 
     // vector<Path> paths = gs.bfsFood(head);
@@ -80,11 +96,9 @@ Direction HeuristicSnake::decideMove(GameState gs, snake_index idx) {
         GameState new_state = gs;
         new_state.makeMove(dir, idx);
         new_state.cleanup();
-        if (new_state.getSnake(idx).isAlive()){
-            double score = scoreState(new_state, idx);
-            move_scores.push_back(make_pair(score, dir));
-            cout << "score: " << score << " dir: " << dir << "\n";            
-        }
+        double score = scoreState(new_state, idx);
+        move_scores.push_back(make_pair(score, dir));
+        cout << "score: " << score << " dir: " << dir << "\n";            
     }
     vector<pair<double, Direction>>::iterator result = max_element(move_scores.begin(), move_scores.end());
     return result->second;

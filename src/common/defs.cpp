@@ -13,10 +13,10 @@ enum class CellType {
 };
 
 enum class Direction {
-	North,
-	South,
-	West,
-	East	
+	North = 1,
+	South =2,
+	West = 3,
+	East = 4	
 };
 
 ostream& operator<<(std::ostream& o, Direction c)
