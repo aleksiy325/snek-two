@@ -13,10 +13,9 @@ public:
 EatSnake::EatSnake(){};
 
 Direction EatSnake::decideMove(GameState gs, snake_index idx){
-	Board board = gs.getBoard();
 	Snake snake = gs.getSnake(idx);
 	Point head = snake.getHead();
-	vector<Path> paths = board.bfsFood(head);
+	vector<Path> paths = gs.bfsFood(head);
 	if(paths.size() > 0){
 		return paths[0].getStepDir(0);
 	}

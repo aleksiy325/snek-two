@@ -13,13 +13,12 @@ public:
 RandomSnake::RandomSnake(){};
 
 Direction RandomSnake::decideMove(GameState gs, snake_index idx){
-	Board board = gs.getBoard();
 	Snake snake = gs.getSnake(idx);
 	Point head = snake.getHead();
 	vector<Direction> safe;
 	for(auto dir : DIRECTIONS){
 		Point p = head.addMove(dir);
-		if(board.isSafe(p)){
+		if(gs.isSafe(p, 1)){
 			safe.push_back(dir);
 		}
 	}

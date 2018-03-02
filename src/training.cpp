@@ -39,7 +39,6 @@ public:
         RandomSnake rsnake = RandomSnake{};
         EatSnake esnake = EatSnake{};
 
-        cout << "training\n";
         for (int j = 0; j < game_iters; j++) {
             Game game = Game(width, height, max_food);
             game.addStrategy(&rsnake);

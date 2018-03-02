@@ -28,7 +28,7 @@ public:
 	int getScore();
 	int getFreeMoves();
 	void useFreeMove();
-	// int getIndexOfPoint(Point point);
+	int getTurnsOccupied(Point p);
 };
 
 
@@ -111,4 +111,10 @@ int Snake::getFreeMoves(){
 
 void Snake::useFreeMove(){
 	free_moves--;
+}
+
+int Snake::getTurnsOccupied(Point p){
+	int index = std::find(points.begin(), points.end(), p) - points.begin();
+	assert(index != points.size());
+	return points.size() - index;
 }

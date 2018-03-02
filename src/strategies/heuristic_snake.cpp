@@ -38,11 +38,10 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
         return std::numeric_limits<double>::lowest();
     }
     // cout << "REACH";
-    Board board = gs.getBoard();
     Point head = snake.getHead();
     double score = 0;
 
-    vector<Path> paths = board.bfsFood(head);
+    vector<Path> paths = gs.bfsFood(head);
 
     if (paths.size()) {
         // score += 1.0 / paths[0].length() * food_weight;
@@ -55,9 +54,9 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
         // cout << "score: " << score << "\n";
     }
 
-    // int free_squares = board.floodFill(head
+    int free_squares = gs.floodFill(head);
 
-    int free_squares = gs.voronoi(idx);
+    //int free_squares = gs.voronoi(idx);
     // cerr << "Free_squares" << free_squares;
 
     if (!free_squares) {
@@ -67,7 +66,6 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
     // score += exp(health_weight * snake.getHealth() / 100.0);
 
     score += free_squares * free_weight;
-    // cout << "weightScore: " << free_squares * free_weight << "\n";
 
     score += 1.0 / snake.getSize() * length_weight;
 
