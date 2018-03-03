@@ -24,9 +24,19 @@ public:
   bool isWinner(int i);
 	void execute();
 	vector<Score> getScores();
+  void resetGame(int width, int height, int max_food, int seed);
 };
 
-Game::Game(){}
+void Game::resetGame(int width, int height, int max_food, int seed){
+  game_state = GameState(width, height, max_food);
+  srand(seed);
+  for(int i = 0; i < strategies.size(); i++){
+    game_state.addSnake();
+  }
+}
+
+Game::Game(){
+}
 
 Game::Game(int width, int height, int max_food){
     game_state = GameState(width, height, max_food);

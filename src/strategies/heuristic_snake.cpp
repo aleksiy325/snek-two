@@ -61,21 +61,22 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
     }
     */
 
-    // vector<Path> paths = gs.bfsFood(head);
+    Point head = snake.getHead();
+    vector<Path> paths = gs.bfsFood(head);
 
-    // if (paths.size()) {
-    //     // score += 1.0 / paths[0].length() * food_weight;
-    //     if (snake.getHealth() < paths[0].length()) {
-    //         return std::numeric_limits<double>::lowest();
-    //     }
-    //     int rope = snake.getHealth() - paths[0].length();
-    //     // score += food_weight * pow(double(rope),3.0/5.0);
-    //     score += food_weight * atan(food_exp * double(rope));
-    //     // cout << "score: " << score << "\n";
-    // }
+    if (paths.size()) {
+        // score += 1.0 / paths[0].length() * food_weight;
+        if (snake.getHealth() < paths[0].length()) {
+            return std::numeric_limits<double>::lowest();
+        }
+        int rope = snake.getHealth() - paths[0].length();
+        // score += food_weight * pow(double(rope),3.0/5.0);
+        score += food_weight * atan(food_exp * double(rope));
+        // cout << "score: " << score << "\n";
+    }
 
     int free_squares = gs.voronoi(idx);
-    score += free_squares;
+    score += free_weight * free_squares;
 
     //int free_squares = gs.voronoi(idx);
     // cerr << "Free_squares" << free_squares;
@@ -173,5 +174,5 @@ pair<double, Direction> HeuristicSnake::decideMoveR(GameState gs, snake_index id
 
 Direction HeuristicSnake::decideMove(GameState gs, snake_index idx) {
    // cout << "IDX: " << idx << "\n";
-   return decideMoveR(gs, idx, 0).second;
+   return decideMoveR(gs, idx, 2).second;
 }
