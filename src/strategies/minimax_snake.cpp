@@ -41,18 +41,18 @@ double MinimaxSnake::scoreState(GameState gs, snake_index idx){
     }
 
 
-    vector<Path> paths = gs.bfsFood(head);
+    // vector<Path> paths = gs.bfsFood(head);
 
-    if (paths.size()) {
-        // score += 1.0 / paths[0].length() * food_weight;
-        if (snake.getHealth() < paths[0].length()) {
-            return std::numeric_limits<double>::lowest();
-        }
-        int rope = snake.getHealth() - paths[0].length();
-        // score += food_weight * pow(double(rope),3.0/5.0);
-        score += food_weight * atan(food_exp * double(rope));
-        // cout << "score: " << score << "\n";
-    }
+    // if (paths.size()) {
+    //     // score += 1.0 / paths[0].length() * food_weight;
+    //     if (snake.getHealth() < paths[0].length()) {
+    //         return std::numeric_limits<double>::lowest();
+    //     }
+    //     int rope = snake.getHealth() - paths[0].length();
+    //     // score += food_weight * pow(double(rope),3.0/5.0);
+    //     score += food_weight * atan(food_exp * double(rope));
+    //     // cout << "score: " << score << "\n";
+    // }
 
     int free_squares = gs.voronoi(idx);
     score += free_squares * free_weight;
@@ -93,13 +93,15 @@ pair<double, Direction> MinimaxSnake::minimax(GameState gs, snake_index idx, Dir
 	vector<pair<double, Direction>> scores = vector<pair<double, Direction>>();
 	for(auto move_pair : combos){
 		GameState ns = gs;
-		ns.makeMove(move_pair.first, idx);
-		if(idx != opp_idx){
-			ns.makeMove(move_pair.second, opp_idx); // you played yourself
+		if(max_player){
+			ns.makeMove(move_pair.first, idx);
+			if(idx != opp_idx){
+				ns.makeMove(move_pair.second, opp_idx); // you played yourself
+			}
 		}
 		ns.cleanup();
 		// TODO: move dependent on max_player?
-		pair<double, Direction> score_pair = minimax(ns, opp_idx, move_pair.first, depth + 1, max_depth, !max_player);
+		pair<double, Direction> score_pair = minimax(ns, idx, move_pair.first, depth + 1, max_depth, !max_player);
 		score_pair.second = move_pair.first;
 		scores.push_back(score_pair);
 	}
@@ -114,7 +116,8 @@ pair<double, Direction> MinimaxSnake::minimax(GameState gs, snake_index idx, Dir
 
 
 Direction MinimaxSnake::decideMove(GameState gs, snake_index idx) {
-    //profile prof(__FUNCTION__, __LINE__);
-	pair<double, Direction> move_pair = minimax(gs, idx, Direction::North, 0, 3, true);	
+    profile prof(__FUNCTION__, __LINE__);
+	pair<double, Direction> move_pair = minimax(gs, idx, Direction::North, 0, 4, true);
+	cout << move_pair.first << endl;
 	return move_pair.second;
 }
