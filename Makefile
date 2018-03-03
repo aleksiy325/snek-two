@@ -23,7 +23,7 @@ train:
 
 server:
 	mkdir -p dist
-	g++ -std=c++11 src/server.cpp -o dist/server -lSDL2main -lSDL2 -lSDL2_ttf -lpthread -lboost_system
+	g++ -std=c++11 src/server.cpp -o dist/server -lpthread -lboost_system
 	dist/server
 
 crow:
