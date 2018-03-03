@@ -8,7 +8,7 @@
 const int num_hsnake = 1;
 
 int main(int argc, char **argv){
-    Game game = Game(15, 15, 20);
+    Game game = Game(20, 20, 15);
 
     // RandomSnake rsnake = RandomSnake();
     EatSnake esnake = EatSnake();
@@ -28,7 +28,7 @@ int main(int argc, char **argv){
     bool quit = false;
     SDL_Event e;
 
-    Uint32 movesPerSecond = 5;
+    Uint32 movesPerSecond = 100;
     Uint32 timePerFrame = 1000 / movesPerSecond;
     Uint32 prevTime = SDL_GetTicks();
 

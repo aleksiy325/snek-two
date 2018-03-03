@@ -18,6 +18,7 @@ public:
     double food_exp = 2.63630;
     MinimaxSnake();
   	MinimaxSnake(double food_weight, double food_exp, double length_weight, double free_weight);
+  	Direction fallbackMove(GameState gs, snake_index idx);
   	pair<double, Direction> alphabeta(GameState gs, snake_index idx, Direction move, double alpha, double beta, int depth, int max_depth, bool max_player);
     double scoreState(GameState gs, snake_index idx);
     Direction decideMove(GameState gs, snake_index idx);
@@ -107,8 +108,10 @@ pair<double, Direction> MinimaxSnake::alphabeta(GameState gs, snake_index idx, D
 		vector<Direction> their_moves = opp_snake.getMoves();
 		for(auto move: their_moves){
 			GameState ns = gs;
-			ns.makeMove(move, opp_idx);
-			ns.cleanup();
+			if(opp_idx != idx){
+				ns.makeMove(move, opp_idx);
+				ns.cleanup();
+			}
 			pair<double, Direction> max = alphabeta(ns, idx, move, alpha, beta, depth + 1, max_depth, !max_player);
 			if(max.first < cur_min){
 				cur_min = max.first;
@@ -126,15 +129,32 @@ pair<double, Direction> MinimaxSnake::alphabeta(GameState gs, snake_index idx, D
 }
 
 Direction MinimaxSnake::fallbackMove(GameState gs, snake_index idx){
-	
+	Snake snake = gs.getSnake(idx);
+	Point head = snake.getHead();
+	vector<Direction> safe;
+	for(auto dir : DIRECTIONS){
+		Point p = head.addMove(dir);
+		if(gs.isSafe(p, 1)){
+			safe.push_back(dir);
+		}
+	}
+	if(safe.size() > 0){
+		return safe[rand() % safe.size()];
+	}
+	return Direction::North;
 }
 
 
 Direction MinimaxSnake::decideMove(GameState gs, snake_index idx) {
-    //profile prof(__FUNCTION__, __LINE__);
+    profile prof(__FUNCTION__, __LINE__);
     double alpha = std::numeric_limits<double>::lowest();
     double beta = std::numeric_limits<double>::max();
 	pair<double, Direction> move_pair = alphabeta(gs, idx, Direction::North, alpha, beta, 0, depth, true);
-	cout << move_pair.first << endl;
+	//cout << move_pair.first << endl;
+	if(move_pair.first == std::numeric_limits<double>::lowest()){
+		cout << "Fallback Move" << endl;
+		return fallbackMove(gs, idx);
+	}
+
 	return move_pair.second;
 }
