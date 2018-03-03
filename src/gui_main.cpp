@@ -6,9 +6,12 @@
 #include "arena/game.cpp"
 
 const int num_hsnake = 1;
+const int board_width = 20;
+const int board_height = 20;
+const int max_food = 20;
 
 int main(int argc, char **argv){
-    Game game = Game(20, 20, 15);
+    Game game = Game(board_width, board_height, max_food);
 
     // RandomSnake rsnake = RandomSnake();
     EatSnake esnake = EatSnake();
@@ -32,12 +35,25 @@ int main(int argc, char **argv){
     Uint32 timePerFrame = 1000 / movesPerSecond;
     Uint32 prevTime = SDL_GetTicks();
 
+    int nextGameDelayFrames = 0;
     while(!quit){
         Uint32 curTime = SDL_GetTicks();
         Uint32 deltaTime = curTime - prevTime;
         if ((deltaTime) > timePerFrame){
             prevTime = curTime;
-            game.executeTick();
+            if(nextGameDelayFrames <= 0){
+              game.executeTick();
+              if(game.winnerExists()){
+                nextGameDelayFrames = 10;
+              }
+            }
+            else if(nextGameDelayFrames == 1){
+              game.resetGame(board_width, board_height, max_food, time(NULL));
+              nextGameDelayFrames--;
+            }
+            else{
+              nextGameDelayFrames--;
+            }
             renderGame(handle, game);
         }
 

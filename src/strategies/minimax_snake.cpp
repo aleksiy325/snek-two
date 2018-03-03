@@ -37,11 +37,12 @@ MinimaxSnake::MinimaxSnake(double food_weight, double food_exp, double length_we
 double MinimaxSnake::scoreState(GameState gs, snake_index idx) {
     double score = 0;
     Snake snake = gs.getSnake(idx);
-    Point head = snake.getHead();
 
     if (!snake.isAlive()) {
         return std::numeric_limits<double>::lowest();
     }
+
+    Point head = snake.getHead();
 
     //win cond
     if (gs.numAlive() == 1) {
