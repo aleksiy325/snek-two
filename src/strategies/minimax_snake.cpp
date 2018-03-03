@@ -205,7 +205,7 @@ Direction MinimaxSnake::decideMove(GameState gs, snake_index idx) {
     double beta = std::numeric_limits<double>::max();
     pair<double, Direction> move_pair = alphabeta(gs, idx, Direction::North, alpha, beta, 0, depth, true);
     //cout << move_pair.first << endl;
-    if (move_pair.first == std::numeric_limits<double>::lowest()) {
+    if (move_pair.first < 0) {
         //cout << "Fallback Move" << endl;
         return fallbackMove(gs, idx);
     }
