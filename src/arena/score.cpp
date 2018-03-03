@@ -1,29 +1,30 @@
 #pragma once
 
+#include <iostream>
+
 
 class Score{
 	int ticks;
-	bool isWinner;
+  int rank;
 public:
 	Score();
-	Score(int ticks, bool isWinner);
+	Score(int ticks, int rank);
 	double evalFitness();
 };
 
 Score::Score(){
 	ticks = 0;
-	isWinner = false;
 }
 
-Score::Score(int ticks, bool isWinner){
+Score::Score(int ticks, int rank){
 	this->ticks = ticks;
-	this->isWinner = isWinner;
+  this->rank = rank;
+  // std::cout << "rank = " << rank << "\n";
+  // std::cout << "ticks = " << ticks<< "\n";
 }
 
 double Score::evalFitness(){
-	double fitness = ticks;
-	if(isWinner){
-		fitness += 0;
-	}
+	double fitness = (300.0/(rank+1.0)) + rank / 100.0;
+  // std::cout << "fitness is " << fitness << "\n";
 	return fitness;
 }

@@ -93,7 +93,8 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
     return score;
 }
 
-
+// recursive function that looks ahead for current snake, assuming that other snakes will take
+// some non-lethal move, grabbing food if it can
 pair<double, Direction> HeuristicSnake::decideMoveR(GameState gs, snake_index idx, int depth) {
     vector<pair<double, Direction>> move_scores;
     for (auto dir : DIRECTIONS) {
@@ -163,14 +164,14 @@ pair<double, Direction> HeuristicSnake::decideMoveR(GameState gs, snake_index id
         }
 
         move_scores.push_back(make_pair(score, dir));
-        cout << "depth: " << depth << "score: " << score << " dir: " << dir << "\n";
+        // cout << "depth: " << depth << "score: " << score << " dir: " << dir << "\n";
     }
     vector<pair<double, Direction>>::iterator result = max_element(move_scores.begin(), move_scores.end());
-    cout << "chose move " << result->second << "\n";
+    // cout << "chose move " << result->second << "\n";
     return *result;
 }
 
 Direction HeuristicSnake::decideMove(GameState gs, snake_index idx) {
-   cout << "IDX: " << idx << "\n";
+   // cout << "IDX: " << idx << "\n";
    return decideMoveR(gs, idx, 0).second;
 }

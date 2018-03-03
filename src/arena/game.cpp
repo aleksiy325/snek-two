@@ -91,7 +91,7 @@ bool Game::winnerExists(){
         if(snake.isAlive()){
            	alive++;
         }
-        idx++;    
+        idx++;
     }
 	return alive == 0 || alive == 1;
 }
@@ -107,13 +107,20 @@ void Game::execute(){
 }
 
 vector<Score> Game::getScores(){
-	vector<Score> scores;
-	for(auto snake: game_state.getSnakes()){
+	vector<Score> scores = vector<Score>(game_state.getSnakes().size());
+  vector<pair<int, int> > ranks;
+	for(int i = 0; i < game_state.getSnakes().size(); i++){
+    Snake snake = game_state.getSnakes()[i];
 		int ticks = snake.getScore();
-		bool isWinner = snake.isAlive();
-		Score score = Score(ticks, isWinner);
-		scores.push_back(score);
+    ranks.push_back(make_pair(ticks,i));
 	}
+  std::sort(ranks.rbegin(), ranks.rend());
+  for(int i = 0; i < ranks.size(); i++){
+    int ticks = ranks[i].first;
+    int index = ranks[i].second;
+    Score score = Score(ticks, i);
+    scores[index] = score;
+  }
 	return scores;
 }
 

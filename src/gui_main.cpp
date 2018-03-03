@@ -47,5 +47,7 @@ int main(int argc, char **argv){
         }
     }
 
+    std::vector<Score> scores = game.getScores();
+
     cleanupSDL(handle);
 }
