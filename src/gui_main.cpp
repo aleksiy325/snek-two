@@ -5,7 +5,7 @@
 #include "strategies/minimax_snake.cpp"
 #include "arena/game.cpp"
 
-const int num_hsnake = 2;
+const int num_hsnake = 4;
 const int board_width = 20;
 const int board_height = 20;
 const int max_food = 20;

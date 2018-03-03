@@ -95,15 +95,22 @@ pair<double, Direction> MinimaxSnake::alphabeta(GameState gs, snake_index idx, D
             Point new_head = new_snake.getHead();
 
             // check whether there's a potential head-on collision
-            vector<Point> neighboors = ns.getBoard().expand(opp_snake.getHead());
-            double scoreAdj = 0;
-            for(Point neighboor : neighboors){
-              if(neighboor == new_head && new_snake.getSize() <= opp_snake.getSize()){
-                scoreAdj += std::numeric_limits<double>::lowest() / 8;
-                break;
-              }
-            }
 
+            double scoreAdj = 0;
+            vector<Snake> snakes = ns.getSnakes();
+            for(int i = 0; i < snakes.size(); i++){
+              Snake other_snake = snakes[i];
+              if(i != idx && other_snake.isAlive()){
+                vector<Point> neighboors = ns.getBoard().expand(other_snake.getHead());
+                for(Point neighboor : neighboors){
+                  if(neighboor == new_head && new_snake.getSize() <= other_snake.getSize()){
+                    scoreAdj += std::numeric_limits<double>::lowest() / 10;
+                    break;
+                  }
+                }
+              }
+
+            }
             // check whether a move is on a snake's tail where that snake can eat
             unordered_set<snake_index> occupants = gs.getBoard().getCellOccupants(new_head);
             if(occupants.size() > 0){
@@ -112,7 +119,7 @@ pair<double, Direction> MinimaxSnake::alphabeta(GameState gs, snake_index idx, D
               vector<Point> expansion = ns.getBoard().expand(other_snake.getHead());
               for(Point pnt : expansion){
                 if(gs.getBoard().getCellType(pnt) == CellType::food){
-                  scoreAdj += std::numeric_limits<double>::lowest() / 8;
+                  scoreAdj += std::numeric_limits<double>::lowest() / 16;
                   break;
                 }
               }
