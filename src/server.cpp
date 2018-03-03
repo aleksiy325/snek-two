@@ -44,7 +44,10 @@ int main(int argc, char **argv)
         return resp;
     });
 
-    CROW_ROUTE(app, "/end")([]() {
+    CROW_ROUTE(app, "/end")
+    .methods("POST"_method)
+    ([](const crow::request & req) {
+        cout << req.body() << endl;
         return "ok";
     });
 
