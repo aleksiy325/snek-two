@@ -2,7 +2,7 @@
 #include "../GALGO-2.0/src/Evolution.hpp"
 #include "strategies/random_snake.cpp"
 #include "strategies/eat_snake.cpp"
-#include "strategies/heuristic_snake.cpp"
+#include "strategies/minimax_snake.cpp"
 #include "arena/game.cpp"
 #include <fstream>
 #include <string>
@@ -48,7 +48,7 @@ public:
 
             //leaking memory fix later
             for (auto params : snake_params) {
-              game.addStrategy(new HeuristicSnake(params[0], params[1], params[2], params[3]));
+              game.addStrategy(new MinimaxSnake(params[0], params[1], params[2], params[3]));
             }
 
             game.execute();
@@ -57,16 +57,6 @@ public:
             for (int i = scores.size() - num_train_snakes; i < scores.size(); i++) {
               int indexAdj = i - (scores.size() - num_train_snakes);
               result[indexAdj][0] += scores[i].evalFitness() / game_iters;
-
-              // save the winning snake's params
-              // if(game.isWinner(i)){
-              //   std::vector<float> params;
-              //   params.push_back(snake_params[indexAdj][0]);
-              //   params.push_back(snake_params[indexAdj][1]);
-              //   params.push_back(snake_params[indexAdj][2]);
-              //   params.push_back(snake_params[indexAdj][3]);
-              //   saveSnakeParams(params);
-              // }
               delete game.strategies[i];
             }
         }

@@ -13,6 +13,7 @@ enum class CellType {
 };
 
 enum class Direction {
+	None = 0,
 	North = 1,
 	South =2,
 	West = 3,
