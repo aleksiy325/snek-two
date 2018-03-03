@@ -75,7 +75,7 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
         // cout << "score: " << score << "\n";
     }
 
-    int free_squares = gs.voronoi(idx);
+    int free_squares = 0; // gs.voronoi(idx);
     score += free_weight * free_squares;
 
     //int free_squares = gs.voronoi(idx);
