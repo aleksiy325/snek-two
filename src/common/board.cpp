@@ -118,6 +118,7 @@ unordered_set<snake_index> Board::getCellOccupants(Point p){
 }
 
 bool Board::isOccupantOf(Point p, snake_index idx){
+	assert(in(p));
 	return board[p.y][p.x].isOccupant(idx);
 }
 

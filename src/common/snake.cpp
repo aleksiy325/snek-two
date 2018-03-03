@@ -29,6 +29,7 @@ public:
 	int getFreeMoves();
 	void useFreeMove();
 	int getTurnsOccupied(Point p);
+	vector<Direction> getMoves();
 };
 
 
@@ -118,4 +119,20 @@ int Snake::getTurnsOccupied(Point p){
 	int index = std::find(points.begin(), points.end(), p) - points.begin();
 	assert(index != points.size());
 	return points.size() - index;
+}
+
+vector<Direction> Snake::getMoves(){
+	vector<Direction> moves = vector<Direction>();
+	Point head = getHead();
+	for(auto dir: DIRECTIONS){
+		Point p = head.addMove(dir);
+		if(getSize() > 1){
+			if(points[1] != p){
+				moves.push_back(dir);
+			}
+		}else{
+			moves.push_back(dir);
+		}
+	}
+	return moves;
 }

@@ -21,7 +21,7 @@ public:
 	int getWidth();
 	int getHeight();
 	bool winnerExists();
-  bool isWinner(int i);
+  	bool isWinner(int i);
 	void execute();
 	vector<Score> getScores();
 };

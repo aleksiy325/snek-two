@@ -2,21 +2,22 @@
 #include "strategies/random_snake.cpp"
 #include "strategies/eat_snake.cpp"
 #include "strategies/heuristic_snake.cpp"
+#include "strategies/minimax_snake.cpp"
 #include "arena/game.cpp"
 
-const int num_hsnake = 2;
+const int num_hsnake = 1;
 
 int main(int argc, char **argv){
-    Game game = Game(10, 10, 20);
+    Game game = Game(15, 15, 20);
 
     // RandomSnake rsnake = RandomSnake();
-    // EatSnake esnake = EatSnake();
-    HeuristicSnake hsnake = HeuristicSnake();
+    EatSnake esnake = EatSnake();
+    MinimaxSnake hsnake = MinimaxSnake();
 
     // game.addStrategy(&rsnake);
     // game.addStrategy(&rsnake);
     // game.addStrategy(&esnake);
-    // game.addStrategy(&esnake);
+    game.addStrategy(&esnake);
 
     for(int i = 0; i < num_hsnake; i++){
         game.addStrategy(&hsnake);
