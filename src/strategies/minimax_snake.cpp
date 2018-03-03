@@ -103,6 +103,22 @@ pair<double, Direction> MinimaxSnake::alphabeta(GameState gs, snake_index idx, D
                 break;
               }
             }
+
+            // check whether a move is on a snake's tail where that snake can eat
+            unordered_set<snake_index> occupants = gs.getBoard().getCellOccupants(new_head);
+            if(occupants.size() > 0){
+              snake_index other_idx = *occupants.begin();
+              Snake other_snake = gs.getSnake(other_idx);
+              vector<Point> expansion = ns.getBoard().expand(other_snake.getHead());
+              for(Point pnt : expansion){
+                if(gs.getBoard().getCellType(pnt) == CellType::food){
+                  scoreAdj += std::numeric_limits<double>::lowest() / 8;
+                  break;
+                }
+              }
+            }
+
+
             pair<double, Direction> min = alphabeta(ns, idx, move, alpha, beta, depth + 1, max_depth, !max_player);
             min.first += scoreAdj;
             if (min.first > cur_max) {
