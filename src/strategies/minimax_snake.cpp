@@ -12,10 +12,10 @@
 class MinimaxSnake: public Strategy {
 public:
     int depth = 4;
-    double food_weight = 40;
-    double length_weight = 0.24893;
-    double free_weight = 1;
-    double food_exp = 5;
+    double food_weight = 28.60914;
+    double length_weight = 0.82267;
+    double free_weight = 7.60983;
+    double food_exp = 8.51774;
     MinimaxSnake();
     MinimaxSnake(double food_weight, double food_exp, double length_weight, double free_weight);
     Direction fallbackMove(GameState gs, snake_index idx);
@@ -47,14 +47,11 @@ double MinimaxSnake::scoreState(GameState gs, snake_index idx) {
     vector<Path> paths = gs.bfsFood(head);
 
     if (paths.size()) {
-        // score += 1.0 / paths[0].length() * food_weight;
         if (snake.getHealth() < paths[0].length()) {
             return std::numeric_limits<double>::lowest();
         }
         int rope = snake.getHealth() - paths[0].length();
-        // score += food_weight * pow(double(rope),3.0/5.0);
         score += food_weight * atan(double(rope) / food_exp);
-        // cout << "score: " << score << "\n";
     }
 
     int free_squares = gs.voronoi(idx);
@@ -65,7 +62,6 @@ double MinimaxSnake::scoreState(GameState gs, snake_index idx) {
     }
 
     score += free_squares * free_weight;
-    score += snake.getSize() * length_weight;
     score += 1.0 / snake.getSize() * length_weight;
 
     return score;
