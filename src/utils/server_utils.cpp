@@ -42,9 +42,9 @@ Snake parseSnake(JSON snake_json, int turn) {
 
     for (auto point : snake_json["body"]["data"]) {
         Point p = parsePoint(point);
-        if (!snake.inSnake(p)) {
+        // if (!snake.inSnake(p)) {
             snake.addPoint(p);
-        }
+        // }
     }
 
     return snake;

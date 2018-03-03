@@ -116,18 +116,27 @@ pair<double, Direction> MinimaxSnake::alphabeta(GameState gs, snake_index idx, D
             if(occupants.size() > 0){
               snake_index other_idx = *occupants.begin();
               Snake other_snake = gs.getSnake(other_idx);
-              vector<Point> expansion = ns.getBoard().expand(other_snake.getHead());
-              for(Point pnt : expansion){
-                if(gs.getBoard().getCellType(pnt) == CellType::food){
-                  scoreAdj += std::numeric_limits<double>::lowest() / 16;
-                  break;
-                }
+              deque<Point> snake_points = other_snake.getPoints();
+              Point p1 = snake_points.back();
+              snake_points.pop_back();
+              Point p2 = snake_points.back();
+              if(p1 == p2){
+                    scoreAdj += std::numeric_limits<double>::lowest() / 16;
               }
+              // vector<Point> expansion = ns.getBoard().expand(other_snake.getHead());
+              // for(Point pnt : expansion){
+              //   if(gs.getBoard().getCellType(pnt) == CellType::food){
+              //     scoreAdj += std::numeric_limits<double>::lowest() / 16;
+              //     break;
+              //   }
+              // }
             }
 
 
             pair<double, Direction> min = alphabeta(ns, idx, move, alpha, beta, depth + 1, max_depth, !max_player);
-            min.first += scoreAdj;
+            if(scoreAdj < 0){
+              min.first = scoreAdj;
+            }
             if (min.first > cur_max) {
                 cur_max = min.first;
                 cur_move = move;
