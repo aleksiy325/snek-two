@@ -71,7 +71,7 @@ double MinimaxSnake::scoreState(GameState gs, snake_index idx) {
     }
 
     score += free_squares * free_weight;
-    score += snake.getSize() * length_weight;
+    score += 1.0 / snake.getSize() * length_weight;
 
     return score;
 }
