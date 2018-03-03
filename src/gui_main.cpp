@@ -4,10 +4,10 @@
 #include "strategies/heuristic_snake.cpp"
 #include "arena/game.cpp"
 
-const int num_hsnake = 2;
+const int num_hsnake = 3;
 
 int main(int argc, char **argv){
-    Game game = Game(10, 10, 20);
+    Game game = Game(14, 14, 20);
 
     // RandomSnake rsnake = RandomSnake();
     // EatSnake esnake = EatSnake();
