@@ -7,10 +7,13 @@
 #include "../utils/profile.cpp"
 #include "strategy.cpp"
 #include <math.h>
+#include <ctime>
 
+const int MAX_TIME_MS = 150;
 
 class MinimaxSnake: public Strategy {
 public:
+    clock_t start;
     int depth = 4;
     double food_weight = 28.60914;
     double length_weight = 0.82267;
@@ -75,8 +78,9 @@ double MinimaxSnake::scoreState(GameState gs, snake_index idx) {
 }
 
 pair<double, Direction> MinimaxSnake::alphabeta(GameState gs, snake_index idx, Direction move, double alpha, double beta, int depth, int max_depth, bool max_player) {
-    Snake snake = gs.getSnake(idx);
-    if (depth == max_depth || !snake.isAlive()) {
+    Snake snake = gs.getSnake(idx); 
+    int delta = (clock() - start) / (CLOCKS_PER_SEC / 1000);
+    if (depth == max_depth || !snake.isAlive() || delta > MAX_TIME_MS) {
         return make_pair(scoreState(gs, idx), move);
     }
     Board board = gs.getBoard();
@@ -187,6 +191,7 @@ Direction MinimaxSnake::fallbackMove(GameState gs, snake_index idx) {
 
 Direction MinimaxSnake::decideMove(GameState gs, snake_index idx) {
     //profile prof(__FUNCTION__, __LINE__);
+    start = clock();
     double alpha = std::numeric_limits<double>::lowest();
     double beta = std::numeric_limits<double>::max();
     pair<double, Direction> move_pair = alphabeta(gs, idx, Direction::North, alpha, beta, 0, depth, true);
