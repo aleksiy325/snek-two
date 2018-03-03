@@ -7,43 +7,53 @@
 
 class Game {
 public:
-	GameState game_state;
-	vector<Strategy*> strategies;
-	Game();
-	Game(int width, int height, int max_food);
-	Game(int width, int height, int max_food, int seed);
-	void decideMoves();
-	void executeTick();
-	void addStrategy(Strategy* strategy);
-	void addStrategies(vector<Strategy*> strategies);
-	Board getBoard();
-	GameState getGameState();
-	int getWidth();
-	int getHeight();
-	bool winnerExists();
-  	bool isWinner(int i);
-	void execute();
-	vector<Score> getScores();
+    GameState game_state;
+    vector<Strategy*> strategies;
+    Game();
+    Game(int width, int height, int max_food);
+    Game(int width, int height, int max_food, int seed);
+    void decideMoves();
+    void executeTick();
+    void addStrategy(Strategy* strategy);
+    void addStrategies(vector<Strategy*> strategies);
+    Board getBoard();
+    GameState getGameState();
+    int getWidth();
+    int getHeight();
+    bool winnerExists();
+    bool isWinner(int i);
+    void execute();
+    vector<Score> getScores();
+    void resetGame(int width, int height, int max_food, int seed);
 };
 
-Game::Game(){}
+void Game::resetGame(int width, int height, int max_food, int seed) {
+    game_state = GameState(width, height, max_food);
+    srand(seed);
+    for (int i = 0; i < strategies.size(); i++) {
+        game_state.addSnake();
+    }
+}
 
-Game::Game(int width, int height, int max_food){
+Game::Game() {
+}
+
+Game::Game(int width, int height, int max_food) {
     game_state = GameState(width, height, max_food);
     srand (time(NULL));
 }
 
-Game::Game(int width, int height, int max_food, int seed){
+Game::Game(int width, int height, int max_food, int seed) {
     game_state = GameState(width, height, max_food);
     srand(seed);
 }
 
-void Game::decideMoves(){
+void Game::decideMoves() {
     snake_index idx = 0;
     GameState save_state = game_state;
-    for(auto strategy: strategies){
+    for (auto strategy : strategies) {
         Snake snake = save_state.getSnake(idx);
-        if(snake.isAlive()){
+        if (snake.isAlive()) {
             Direction dir = strategy->decideMove(save_state, idx);
             game_state.makeMove(dir, idx);
         }
@@ -51,73 +61,80 @@ void Game::decideMoves(){
     }
 }
 
-void Game::executeTick(){
-	decideMoves();
+void Game::executeTick() {
+    decideMoves();
     game_state.cleanup();
-    if(!game_state.isValid()){
+    if (!game_state.isValid()) {
         cout << "Non valid game_state" << endl;
     }
 }
 
-void Game::addStrategy(Strategy* strategy){
-	game_state.addSnake();
-	strategies.push_back(strategy);
+void Game::addStrategy(Strategy* strategy) {
+    game_state.addSnake();
+    strategies.push_back(strategy);
 }
 
-void Game::addStrategies(vector<Strategy*> strategies){
-	this->strategies = strategies;
-	for(auto strategy: strategies){
-		game_state.addSnake();
-	}
-}
-
-Board Game::getBoard(){
-	return game_state.getBoard();
-}
-
-int Game::getWidth(){
-	return game_state.getWidth();
-}
-
-int Game::getHeight(){
-	return game_state.getHeight();
-}
-
-bool Game::winnerExists(){
-	int alive = 0;
-	snake_index idx = 0;
-    for(auto strategy: strategies){
-        Snake snake = game_state.getSnake(idx);
-        if(snake.isAlive()){
-           	alive++;
-        }
-        idx++;    
+void Game::addStrategies(vector<Strategy*> strategies) {
+    this->strategies = strategies;
+    for (auto strategy : strategies) {
+        game_state.addSnake();
     }
-	return alive == 0 || alive == 1;
 }
 
-GameState Game::getGameState(){
-	return game_state;
+Board Game::getBoard() {
+    return game_state.getBoard();
 }
 
-void Game::execute(){
-	while(!winnerExists()){
-		executeTick();
-	}
+int Game::getWidth() {
+    return game_state.getWidth();
 }
 
-vector<Score> Game::getScores(){
-	vector<Score> scores;
-	for(auto snake: game_state.getSnakes()){
-		int ticks = snake.getScore();
-		bool isWinner = snake.isAlive();
-		Score score = Score(ticks, isWinner);
-		scores.push_back(score);
-	}
-	return scores;
+int Game::getHeight() {
+    return game_state.getHeight();
 }
 
-bool Game::isWinner(int i){
-	return game_state.getSnakes()[i].isAlive();
+bool Game::winnerExists() {
+    int alive = 0;
+    snake_index idx = 0;
+    for (auto strategy : strategies) {
+        Snake snake = game_state.getSnake(idx);
+        if (snake.isAlive()) {
+            alive++;
+        }
+        idx++;
+    }
+    return alive == 0 || alive == 1;
+}
+
+GameState Game::getGameState() {
+    return game_state;
+}
+
+void Game::execute() {
+    while (!winnerExists()) {
+        executeTick();
+    }
+}
+
+vector<Score> Game::getScores() {
+    vector<Score> scores = vector<Score>(game_state.getSnakes().size());
+    vector<pair<int, int> > ranks;
+    for (int i = 0; i < game_state.getSnakes().size(); i++) {
+        Snake snake = game_state.getSnakes()[i];
+        int ticks = snake.getScore();
+        ranks.push_back(make_pair(ticks, i));
+    }
+    std::sort(ranks.rbegin(), ranks.rend());
+    for (int i = 0; i < ranks.size(); i++) {
+        int ticks = ranks[i].first;
+        int index = ranks[i].second;
+        Score score = Score(ticks, i);
+        scores[index] = score;
+    }
+    return scores;
+}
+
+bool Game::isWinner(int i) {
+    return game_state.getSnakes()[i].isAlive();
 }
 
