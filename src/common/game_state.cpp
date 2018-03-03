@@ -43,7 +43,7 @@ public:
     int getWidth();
     vector<Snake> getSnakes();
     void printScoreBoard();
-    int voronoi(int voronoi_snake_id);
+    pair<int, int> voronoi(int voronoi_snake_id);
     int getTick();
     bool isSafe(Point p, int distance);
     bool willBeUnnocupied(Point p, int distance);
@@ -421,8 +421,9 @@ snake_index GameState::getOpponent(snake_index idx) {
 }
 
 
-int GameState::voronoi(snake_index index) {
+pair<int, int> GameState::voronoi(snake_index index) {
     int depth  = 0;
+    int food_depth = -1;
     const pair<Point, snake_index> PAIR_DEPTH_MARK;
     const snake_index MARK = -1;
     queue<pair<Point, snake_index>> q = queue<pair<Point, snake_index>>();
@@ -464,6 +465,9 @@ int GameState::voronoi(snake_index index) {
                     }
                 } else {
                     if (board.in(point) && isSafe(point, depth)) {
+                        if(board.getCellType(point) == CellType::food && idx == index && food_depth == -1){
+                            food_depth = depth;
+                        }
                         counts[idx]++;
                         pair<Point, snake_index> npair = pair<Point, snake_index>(point, idx);
                         visited[point] = idx;
@@ -473,7 +477,7 @@ int GameState::voronoi(snake_index index) {
             }
         }
     }
-    return counts[index];
+    return make_pair(counts[index], food_depth);
 }
 
 
