@@ -50,6 +50,7 @@ public:
     vector<Path> bfsFood(Point start);
     snake_index getOpponent(snake_index idx);
     int floodFill(Point start);
+    int numAlive();
 };
 
 
@@ -473,4 +474,15 @@ int GameState::voronoi(snake_index index) {
         }
     }
     return counts[index];
+}
+
+
+int GameState::numAlive() {
+    int i = 0;
+    for (auto snake : getSnakes()) {
+        if (snake.isAlive()) {
+            i++;
+        }
+    }
+    return i;
 }

@@ -43,18 +43,21 @@ double MinimaxSnake::scoreState(GameState gs, snake_index idx) {
         return std::numeric_limits<double>::lowest();
     }
 
+    //win cond
+    if (gs.numAlive() == 1) {
+        return std::numeric_limits<double>::max();
+    }
+
+    score += 10000 / gs.numAlive();
 
     vector<Path> paths = gs.bfsFood(head);
 
     if (paths.size()) {
-        // score += 1.0 / paths[0].length() * food_weight;
         if (snake.getHealth() < paths[0].length()) {
             return std::numeric_limits<double>::lowest();
         }
         int rope = snake.getHealth() - paths[0].length();
-        // score += food_weight * pow(double(rope),3.0/5.0);
         score += food_weight * atan(double(rope) / food_exp);
-        // cout << "score: " << score << "\n";
     }
 
     int free_squares = gs.voronoi(idx);
@@ -66,7 +69,6 @@ double MinimaxSnake::scoreState(GameState gs, snake_index idx) {
 
     score += free_squares * free_weight;
     score += snake.getSize() * length_weight;
-    score += 1.0 / snake.getSize() * length_weight;
 
     return score;
 }
