@@ -91,7 +91,20 @@ pair<double, Direction> MinimaxSnake::alphabeta(GameState gs, snake_index idx, D
         for (auto move : our_moves) {
             GameState ns = gs;
             ns.makeMove(move, idx);
+            Snake new_snake = ns.getSnakes()[idx];
+            Point new_head = new_snake.getHead();
+
+            // check whether there's a potential head-on collision
+            vector<Point> neighboors = ns.getBoard().expand(opp_snake.getHead());
+            double scoreAdj = 0;
+            for(Point neighboor : neighboors){
+              if(neighboor == new_head && new_snake.getSize() <= opp_snake.getSize()){
+                scoreAdj += std::numeric_limits<double>::lowest() / 8;
+                break;
+              }
+            }
             pair<double, Direction> min = alphabeta(ns, idx, move, alpha, beta, depth + 1, max_depth, !max_player);
+            min.first += scoreAdj;
             if (min.first > cur_max) {
                 cur_max = min.first;
                 cur_move = move;

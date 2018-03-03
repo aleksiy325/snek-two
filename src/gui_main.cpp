@@ -5,7 +5,7 @@
 #include "strategies/minimax_snake.cpp"
 #include "arena/game.cpp"
 
-const int num_hsnake = 1;
+const int num_hsnake = 2;
 const int board_width = 20;
 const int board_height = 20;
 const int max_food = 20;
@@ -20,7 +20,7 @@ int main(int argc, char **argv){
     // game.addStrategy(&rsnake);
     // game.addStrategy(&rsnake);
     // game.addStrategy(&esnake);
-    game.addStrategy(&esnake);
+    // game.addStrategy(&esnake);
 
     for(int i = 0; i < num_hsnake; i++){
         game.addStrategy(&hsnake);
