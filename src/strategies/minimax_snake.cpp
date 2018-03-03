@@ -12,10 +12,10 @@
 class MinimaxSnake: public Strategy {
 public:
     int depth = 4;
-    double food_weight = 40;
-    double length_weight = 0.24893;
-    double free_weight = 1;
-    double food_exp = 5;
+    double food_weight = 28.60914;
+    double length_weight = 0.82267;
+    double free_weight = 7.60983;
+    double food_exp = 8.51774;
     MinimaxSnake();
     MinimaxSnake(double food_weight, double food_exp, double length_weight, double free_weight);
     Direction fallbackMove(GameState gs, snake_index idx);
@@ -48,7 +48,7 @@ double MinimaxSnake::scoreState(GameState gs, snake_index idx) {
         return std::numeric_limits<double>::max();
     }
 
-    score += 10000 / gs.numAlive();
+    score += 100000 / gs.numAlive();
 
     vector<Path> paths = gs.bfsFood(head);
 
