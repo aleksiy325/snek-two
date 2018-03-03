@@ -18,7 +18,7 @@ public:
     double food_exp = 2.63630;
     MinimaxSnake();
   	MinimaxSnake(double food_weight, double food_exp, double length_weight, double free_weight);
-  	pair<double, Direction> minimax(GameState gs, snake_index idx, Direction move, int depth, int max_depth, bool max_player);
+  	pair<double, Direction> alphabeta(GameState gs, snake_index idx, Direction move, double alpha, double beta, int depth, int max_depth, bool max_player);
     double scoreState(GameState gs, snake_index idx);
     Direction decideMove(GameState gs, snake_index idx);
 };
@@ -69,7 +69,7 @@ double MinimaxSnake::scoreState(GameState gs, snake_index idx){
     return score;
 }
 
-pair<double, Direction> MinimaxSnake::minimax(GameState gs, snake_index idx, Direction move, int depth, int max_depth, bool max_player){
+pair<double, Direction> MinimaxSnake::alphabeta(GameState gs, snake_index idx, Direction move, double alpha, double beta, int depth, int max_depth, bool max_player){
 	Snake snake = gs.getSnake(idx);
 	if (depth == max_depth || !snake.isAlive()){
 		return make_pair(scoreState(gs, idx), move);
@@ -86,10 +86,16 @@ pair<double, Direction> MinimaxSnake::minimax(GameState gs, snake_index idx, Dir
 		for(auto move: our_moves){
 			GameState ns = gs;
 			ns.makeMove(move, idx);
-			pair<double, Direction> min = minimax(ns, idx, move, depth + 1, max_depth, !max_player);
+			pair<double, Direction> min = alphabeta(ns, idx, move, alpha, beta, depth + 1, max_depth, !max_player);
 			if(min.first > cur_max){
 				cur_max = min.first;
 				cur_move = move;
+			}
+			if(cur_max > alpha){
+				alpha = cur_max;
+			}
+			if(beta <= alpha){
+				break;
 			}
 		}
 		return make_pair(cur_max, cur_move);
@@ -103,19 +109,32 @@ pair<double, Direction> MinimaxSnake::minimax(GameState gs, snake_index idx, Dir
 			GameState ns = gs;
 			ns.makeMove(move, opp_idx);
 			ns.cleanup();
-			pair<double, Direction> max = minimax(ns, idx, move, depth + 1, max_depth, !max_player);
+			pair<double, Direction> max = alphabeta(ns, idx, move, alpha, beta, depth + 1, max_depth, !max_player);
 			if(max.first < cur_min){
 				cur_min = max.first;
 				cur_move = move;
+			}
+			if(cur_min < beta){
+				beta = cur_min;
+			}
+			if(beta <= alpha){
+				break;
 			}
 		}
 		return make_pair(cur_min, cur_move);
 	}
 }
 
+Direction MinimaxSnake::fallbackMove(GameState gs, snake_index idx){
+	
+}
+
+
 Direction MinimaxSnake::decideMove(GameState gs, snake_index idx) {
     //profile prof(__FUNCTION__, __LINE__);
-	pair<double, Direction> move_pair = minimax(gs, idx, Direction::North, 0, depth, true);
+    double alpha = std::numeric_limits<double>::lowest();
+    double beta = std::numeric_limits<double>::max();
+	pair<double, Direction> move_pair = alphabeta(gs, idx, Direction::North, alpha, beta, 0, depth, true);
 	cout << move_pair.first << endl;
 	return move_pair.second;
 }
