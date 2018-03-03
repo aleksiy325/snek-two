@@ -50,5 +50,5 @@ int main(int argc, char **argv)
         return "ok";
     });
 
-    app.port(port).multithreaded().run();
+    app.port(port).run();
 }
