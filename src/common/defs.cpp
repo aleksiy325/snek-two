@@ -7,17 +7,17 @@ using namespace std;
 typedef int snake_index;
 
 enum class CellType {
-	empty, 
-	wall, 
-	food
+    empty,
+    wall,
+    food
 };
 
 enum class Direction {
-	None = 0,
-	North = 1,
-	South =2,
-	West = 3,
-	East = 4	
+    None = 0,
+    North = 1,
+    South = 2,
+    West = 3,
+    East = 4
 };
 
 ostream& operator<<(std::ostream& o, Direction c)
@@ -32,7 +32,14 @@ const int HEALTH_LOSS = 1;
 const int FREE_MOVES = 2;
 
 map<CellType, string> CELL_STR_MAP {
-	{CellType::empty, "  "},
-	{CellType::wall, "X "},
-	{CellType::food, "f "}
+    {CellType::empty, "  "},
+    {CellType::wall, "X "},
+    {CellType::food, "f "}
+};
+
+map<Direction, string> DIR_STR_MAP {
+    {Direction::North, "up"},
+    {Direction::South, "down"},
+    {Direction::West, "left"},
+    {Direction::East, "right"}
 };

@@ -8,25 +8,25 @@
 #include <string>
 #include <random>
 
-const int width = 20;
-const int height = 20;
+const int width = 15;
+const int height = 15;
 const int max_food = 10;
-const int num_train_snakes = 8;
+const int num_train_snakes = 4;
 const int iterations = 100;
 const int game_iters = 10;
 
 static int g_iter_count = 0;
 static int g_train_id;
 
-void saveSnakeParams(vector<float> params){
-  std::string fname = "saves/"
-    + std::to_string(g_train_id) + "T"
-    + std::to_string(g_iter_count) + "I.snk";
-  ofstream result_file(fname);
+void saveSnakeParams(vector<float> params) {
+    std::string fname = "saves/"
+                        + std::to_string(g_train_id) + "T"
+                        + std::to_string(g_iter_count) + "I.snk";
+    ofstream result_file(fname);
 
-  for(float param : params){
-    result_file << param << "\n";
-  }
+    for (float param : params) {
+        result_file << param << "\n";
+    }
 }
 
 template <typename T>
@@ -46,18 +46,17 @@ public:
             game.addStrategy(&esnake);
             game.addStrategy(&esnake);
 
-            //leaking memory fix later
             for (auto params : snake_params) {
-              game.addStrategy(new MinimaxSnake(params[0], params[1], params[2], params[3]));
+                game.addStrategy(new MinimaxSnake(params[0], params[1], params[2], params[3]));
             }
 
             game.execute();
 
             std::vector<Score> scores = game.getScores();
             for (int i = scores.size() - num_train_snakes; i < scores.size(); i++) {
-              int indexAdj = i - (scores.size() - num_train_snakes);
-              result[indexAdj][0] += scores[i].evalFitness() / game_iters;
-              delete game.strategies[i];
+                int indexAdj = i - (scores.size() - num_train_snakes);
+                result[indexAdj][0] += scores[i].evalFitness() / game_iters;
+                delete game.strategies[i];
             }
         }
         g_iter_count++;
@@ -71,7 +70,7 @@ int main()
     srand(time(NULL));
     g_train_id = rand();
     // galgo::Parameter<double> health_weight({ -10.0, 10.0});
-    galgo::Parameter<double> food_weight({ -10.0, 10.0});
+    galgo::Parameter<double> food_weight({ -100.0, 100.0});
     galgo::Parameter<double> length_weight({ -10.0, 10.0});
     galgo::Parameter<double> free_weight({ -10.0, 10.0});
     galgo::Parameter<double> food_exp({ 0.05, 1.0});

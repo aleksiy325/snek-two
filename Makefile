@@ -16,15 +16,20 @@ gui:
 	g++ -std=c++11 src/gui_main.cpp -o dist/snek -lSDL2main -lSDL2 -lSDL2_ttf
 	dist/snek
 
-clean:
-	rm -rf dist
-
-galgo: 
-	mkdir -p dist
-	g++ -std=c++11 GALGO-2.0/src/example.cpp -o dist/galgo
-	dist/galgo
-
 train: 
 	mkdir -p dist
 	g++ -std=c++11 src/training.cpp -o dist/train -O3
 	dist/train
+
+server:
+	mkdir -p dist
+	g++ -std=c++11 src/server.cpp -o dist/server -lSDL2main -lSDL2 -lSDL2_ttf -lpthread -lboost_system
+	dist/server
+
+crow:
+	cd crow/amalgamate 
+	python crow/amalgamate/merge_all.py
+	
+	
+clean:
+	rm -rf dist
