@@ -24,12 +24,10 @@ train:
 server:
 	mkdir -p dist
 	g++ -std=c++11 src/server.cpp -o dist/server -lpthread -lboost_system
-	dist/server
 
 crow:
 	cd crow/amalgamate 
 	python crow/amalgamate/merge_all.py
-	
 	
 clean:
 	rm -rf dist

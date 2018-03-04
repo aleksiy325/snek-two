@@ -15,7 +15,7 @@ class MinimaxSnake: public Strategy {
 public:
     clock_t start;
     int depth = 4;
-    double food_weight = 28.60914;
+    double food_weight = 68.60914;
     double length_weight = 0.82267;
     double free_weight = 7.60983;
     double food_exp = 8.51774;
