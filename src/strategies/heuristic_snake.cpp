@@ -40,56 +40,28 @@ double HeuristicSnake::scoreState(GameState gs, snake_index idx) {
     if (!snake.isAlive()) {
         return std::numeric_limits<double>::lowest();
     }
-    // cout << "REACH";
-
-    /*
-      Point head = snake.getHead();
-    map<Point,int> potential_head_ons;
-    for(int i = 0; i < gs.getSnakes().size(); i++ ){
-      if (i != idx && gs.getSnakes()[i].isAlive()){
-            vector<Point> expand = gs.getBoard().expand( gs.getSnakes().at(i).getHead());
-            for(auto point : expand){
-                potential_head_ons.insert(pair<Point,int>(point,i));
-            }
-        }
-    }
-    if (potential_head_ons.find(head) != potential_head_ons.end()){
-        Snake enemy = gs.getSnake(potential_head_ons.find(head)->second);
-        if (enemy.getSize() >= snake.getSize()){
-            score += std::numeric_limits<double>::lowest() / 2;
-        }
-    }
-    */
 
     Point head = snake.getHead();
     vector<Path> paths = gs.bfsFood(head);
 
     if (paths.size()) {
-        // score += 1.0 / paths[0].length() * food_weight;
         if (snake.getHealth() < paths[0].length()) {
             return std::numeric_limits<double>::lowest();
         }
         int rope = snake.getHealth() - paths[0].length();
-        // score += food_weight * pow(double(rope),3.0/5.0);
         score += food_weight * atan(food_exp * double(rope));
-        // cout << "score: " << score << "\n";
     }
 
     int free_squares = 0; // gs.voronoi(idx);
     score += free_weight * free_squares;
 
-    //int free_squares = gs.voronoi(idx);
-    // cerr << "Free_squares" << free_squares;
+    if (!free_squares) {
+        return std::numeric_limits<double>::lowest();
+    }
 
-    // if (!free_squares) {
-    //     return std::numeric_limits<double>::lowest();
-    // }
+    score += free_squares * free_weight;
 
-    // // score += exp(health_weight * snake.getHealth() / 100.0);
-
-    // score += free_squares * free_weight;
-
-    // score += 1.0 / snake.getSize() * length_weight;
+    score += 1.0 / snake.getSize() * length_weight;
 
     return score;
 }
@@ -128,12 +100,7 @@ pair<double, Direction> HeuristicSnake::decideMoveR(GameState gs, snake_index id
                 break;
               }
             }
-            cout << "moving other dir " << finalDir << "\n";
             new_state.makeMove(finalDir, other_i);
-            // cout << "tail of other: " 
-            //      << new_state.getSnake(other_i).points.back().x
-            //      << ","
-            //      << new_state.getSnake(other_i).points.back().y << "\n";
           }
         }
 
@@ -171,6 +138,6 @@ pair<double, Direction> HeuristicSnake::decideMoveR(GameState gs, snake_index id
 }
 
 Direction HeuristicSnake::decideMove(GameState gs, snake_index idx) {
-   // cout << "IDX: " << idx << "\n";
+   cout << "IDX: " << idx << "\n";
    return decideMoveR(gs, idx, 2).second;
 }

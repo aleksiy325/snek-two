@@ -47,7 +47,7 @@ double MinimaxSnake::scoreState(GameState gs, snake_index idx) {
 
     Point head = snake.getHead();
 
-    //win cond
+    // win condition
     if (gs.numAlive() == 1) {
         return std::numeric_limits<double>::max();
     }
@@ -65,8 +65,9 @@ double MinimaxSnake::scoreState(GameState gs, snake_index idx) {
 
     vector<Path> paths = gs.bfsFood(head);
 
- 
     if (paths.size()) {
+      // set this to be the distance to the closest food that we control
+      // if we don't control any food, set to be distance to closest food in general (to our head)
         int food_length = owned_food_depth;
         if(food_length == -1){
             food_length = paths[0].length();
@@ -74,17 +75,18 @@ double MinimaxSnake::scoreState(GameState gs, snake_index idx) {
         if (snake.getHealth() < food_length) {
             return std::numeric_limits<double>::lowest();
         }
+        // how much room we have to eat. 0 = we must take exact path to food or we die
         int rope = snake.getHealth() - food_length;
+        // using arctan function simulate importance of first few jumps of this value
         score += food_weight * atan(double(rope) / food_exp);
     }
-
-
 
     score += free_squares * free_weight;
     score += 1.0 / snake.getSize() * length_weight;
 
     return score;
 }
+
 
 pair<double, Direction> MinimaxSnake::alphabeta(GameState gs, snake_index idx, Direction move, double alpha, double beta, int depth, int max_depth, bool max_player) {
     Snake snake = gs.getSnake(idx); 
@@ -213,18 +215,14 @@ Direction MinimaxSnake::decideMove(GameState gs, snake_index idx) {
     double alpha = std::numeric_limits<double>::lowest();
     double beta = std::numeric_limits<double>::max();
     pair<double, Direction> move_pair = alphabeta(gs, idx, Direction::North, alpha, beta, 0, depth, true);
-    //cout << move_pair.first << endl;
-    
+
     if (move_pair.first < 0) {
-        //cout << "Fallback Move" << endl;
         return fallbackMove(gs, idx);
     }
     GameState ct = gs;
     ct.makeMove(move_pair.second, idx);
     ct.cleanup();
-    // cout << "2" << flush;
     if (!ct.getSnake(idx).isAlive()){
-        // cout << "Final move makes snake id die, idx: " << idx << flush << "\n";
         return fallbackMove(gs, idx);
     }
 
